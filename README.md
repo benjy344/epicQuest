@@ -1,24 +1,19 @@
-# README
+# Epic Quest
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Concept :
+	Epic Quest est un jeu d'aventure en point & clic. Le but est de réaliser de nombreuses quêtes dans differents donjons afin de gagner en experience afin de vaincre votre enemie juré : MRMECHANT
 
-Things you may want to cover:
+Models :
+	User
+	Persona
+	Avatar (extends Persona)
+	Monster (extends Persona)
+	Quest
+	Donjon
+	Room
+	Object
+	Chest
 
-* Ruby version
+Techno :
+	Ruby on Rails
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
