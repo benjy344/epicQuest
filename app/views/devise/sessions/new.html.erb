@@ -1,0 +1,55 @@
+
+<div id="signin">
+    <div class="container">
+
+        <div class="formHolder login">
+
+            <h3>Login</h3>
+
+            <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name), defaults: {wrapper_html: { class: 'form-group' }, input_html: { class: 'form-input' } }) do |f| %>
+              <div class="form-inputs">
+                <%= f.input :login, required: false, autofocus: true, label_html: { class: 'form-group' } %>
+                <%= f.input :password, required: false, label: 'Password', label_html: { class: 'form-group' }%>
+                <%= f.input :remember_me, label: 'Remember me', label_html: { class: 'form-group' },  as: :boolean if devise_mapping.rememberable? %>
+              </div>
+
+              <div class="form-actions">
+                <%= f.button :submit, "Sign in" , class: "btn btn-sm btn-default simplebutton newAccButton", label_html: { class: 'form-group' }%>
+              </div>
+            <% end %>
+            <button class="btn btn-sm btn-link newAccButton" id="showSignUp" >Don't have an account?</button>
+
+        </div>
+
+        <div class="formHolder signup">
+            <h3>Sign Up</h3>
+            <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), defaults: {wrapper_html: { class: 'form-group' }, input_html: { class: 'form-input' } }) do |f| %>
+            <div class="form-inputs">
+              <%= f.input :username, required: true, autofocus: true, label_html: { class: 'form-group' }%>
+              <%= f.input :email, required: true, label_html: { class: 'form-group' } %>
+              <%= f.input :password, required: true, hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length), label: 'Password', label_html: { class: 'form-group' } %>
+              <%= f.input :password_confirmation, label: 'Confirm password', required: true, label_html: { class: 'form-group' } %>
+            </div>
+
+            <div class="form-actions">
+              <%= f.button :submit, "Create account", class: "btn btn-sm btn-default simplebutton newAccButton", label_html: { class: 'form-group' }%>
+            </div>
+            <% end %>
+            <button class="btn btn-sm btn-link loginButton" id="showLogin" >Already have an account?</button>
+
+        </div>
+
+    </div>
+    <ul class="bg-bubbles">
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+</div>

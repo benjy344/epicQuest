@@ -8,7 +8,25 @@
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="<%= controller.controller_name %>">
+    <div class="messages">
+      <p class="notice"><%= notice %></p>
+      <p class="alert"><%= alert %></p>
+    </div>
+
+      <%= yield %>
+
+
+    <% if user_signed_in?%>
+    <div class="user-info">
+      <p>Connecté en tant que : <%= current_user.username%></p>
+      <p>
+        <%= link_to 'Déconnection' , destroy_user_session_path, :method => :delete %>
+      </p>
+      <div class="close-user"><div class="link"><span class="link__icon__bar"></span></div></div>
+    </div>
+
+
+    <% end %>
   </body>
 </html>
