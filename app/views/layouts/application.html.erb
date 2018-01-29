@@ -6,6 +6,7 @@
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <link href="https://fonts.googleapis.com/css?family=Niconne" rel="stylesheet">
   </head>
 
   <body class="<%= controller.controller_name %>">
@@ -14,19 +15,24 @@
       <p class="alert"><%= alert %></p>
     </div>
 
+	<% if user_signed_in?%>
+		<button class="toggle-nav js-toggle-nav">
+			<span></span>
+		</button>
+	    <nav class="main-nav js-main-nav">
+	    	<div class="overlay"></div>
+
+	    	    <div class="user-info">
+	    	      <p><%= current_user.username%></p>
+	    	      <%= link_to 'Logout' , destroy_user_session_path, :method => :delete, :class => "logout" %>
+	    	    </div>
+
+	    </nav>
+	<% end %>
+
       <%= yield %>
 
 
-    <% if user_signed_in?%>
-    <div class="user-info">
-      <p>Connecté en tant que : <%= current_user.username%></p>
-      <p>
-        <%= link_to 'Déconnection' , destroy_user_session_path, :method => :delete %>
-      </p>
-      <div class="close-user"><div class="link"><span class="link__icon__bar"></span></div></div>
-    </div>
 
-
-    <% end %>
   </body>
 </html>

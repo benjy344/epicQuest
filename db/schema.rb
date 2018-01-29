@@ -10,7 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180126120306) do
+ActiveRecord::Schema.define(version: 20180129125656) do
+
+  create_table "avatars", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "hp", default: 20
+    t.integer "level", default: 1
+    t.integer "exp", default: 0
+    t.integer "countUnlockDonjon", default: 1
+    t.integer "history", default: 0
+    t.integer "MaxHealth", default: 20
+    t.integer "force", default: 5
+    t.integer "agility", default: 5
+    t.integer "inteligence", default: 5
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false

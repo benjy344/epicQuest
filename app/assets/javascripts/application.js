@@ -15,3 +15,11 @@
 //= require jquery
 //= require jquery_ujs
 //= require_tree .
+
+$(document).ready(function(){
+
+	$('.js-toggle-nav, .overlay').click(function(){
+	    $('.js-main-nav').toggleClass('open')
+	    return false;
+	})
+})

@@ -1,5 +1,29 @@
 
+.index {
+	-webkit-font-smoothing: antialiased;
+	text-shadow: 1px 1px 1px rgba(0,0,0,0.01);
+	height: 100vh;
+	max-width: 100vw;
+	min-width: 100vw;
+	padding: 0px;
+	line-height: 20px;
+	background: -webkit-linear-gradient(90deg, #614385 10%, #516395 90%); /* Chrome 10+, Saf5.1+ */
+	background:    -moz-linear-gradient(90deg, #614385 10%, #516395 90%); /* FF3.6+ */
+	background:     -ms-linear-gradient(90deg, #614385 10%, #516395 90%); /* IE10 */
+	background:      -o-linear-gradient(90deg, #614385 10%, #516395 90%); /* Opera 11.10+ */
+	background:         linear-gradient(90deg, #614385 10%, #516395 90%); /* W3C */
+	padding: 20vh;
+	margin: 0;
+	text-align: center;
+	overflow:hidden;
 
+	h1 {
+		font-size: 4rem;
+		font-family: 'Niconne', cursive;
+		color: white;
+
+	}
+}
 
 .sessions {
 	-webkit-font-smoothing: antialiased;
@@ -8,6 +32,8 @@
 	max-width: 100vw;
 	min-width: 100vw;
 	padding: 0px;
+	overflow:hidden;
+	margin: 0;
 	line-height: 20px;
 	background: -webkit-linear-gradient(90deg, #614385 10%, #516395 90%); /* Chrome 10+, Saf5.1+ */
 	background:    -moz-linear-gradient(90deg, #614385 10%, #516395 90%); /* FF3.6+ */
