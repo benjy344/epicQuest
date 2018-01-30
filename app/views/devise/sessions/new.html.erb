@@ -10,8 +10,14 @@
               <div class="form-inputs">
                 <%= f.input :login, required: false, autofocus: true, label_html: { class: 'form-group' } %>
                 <%= f.input :password, required: false, label: 'Password', label_html: { class: 'form-group' }%>
-                <%= f.input :remember_me, label: 'Remember me', label_html: { class: 'form-group' },  as: :boolean if devise_mapping.rememberable? %>
+                <div class="form-group">
+                  <label class="form-checkbox">
+                    <%= f.input_field :remember_me, as: :boolean if devise_mapping.rememberable? %>
+                    <i class="form-icon"></i> Remember me
+                  </label>
+                </div>
               </div>
+
 
               <div class="form-actions">
                 <%= f.button :submit, "Sign in" , class: "btn btn-sm btn-default simplebutton newAccButton", label_html: { class: 'form-group' }%>

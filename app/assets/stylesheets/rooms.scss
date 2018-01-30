@@ -1,0 +1,122 @@
+// Place all the styles related to the Rooms controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+.room {
+	height: 100vh;
+	width: 100vw;
+	background: transparent;
+	color: white;
+	position: absolute;
+	top: -2000vw;
+	left: -2000vw;
+
+	&.active {
+		top: 0;
+		left: 0;
+
+
+		.interactive {
+			transition: all .3s ease;
+			cursor: pointer;
+
+			&:hover {
+				transition: all 1s ease;
+				-webkit-box-shadow: 0px 0px 38px 3px rgba(255,255,255,1);
+				-moz-box-shadow: 0px 0px 38px 3px rgba(255,255,255,1);
+				box-shadow: 0px 0px 38px 3px rgba(255,255,255,1);
+			}
+
+			&.tooltip-active {
+				.tooltip {
+					opacity: 1;
+					transition: opacity .4s ease-in;
+					pointer-events: initial;
+				}
+			}
+
+			.tooltip {
+				opacity: 0;
+				pointer-events: none;
+				transition: opacity .4s ease-in;
+				position:absolute;
+				top: -15px;
+				left: 50%;
+				transform: translateY(-100%) translateX(-50%);
+				background: white;
+				width: 150px;
+				border-radius: 6px;
+				color: #B3B1B2;
+
+
+				header {
+					text-align: center;
+					padding: 5px;
+					border-bottom: 1px solid #e2e2e2;
+
+					h3 {
+						margin: 5px;
+						font-weight: 100;
+						text-transform: uppercase;
+					}
+				}
+
+				ul {
+					margin: 0;
+					padding: 0;
+					text-align:center;
+
+					li {
+						padding: 10px 0;
+						list-style: none;
+
+						&:last-child {
+							border-radius: 0 0 6px 6px;
+						}
+
+						&:hover {
+							background: #e2e2e2;
+						}
+
+						a {
+							text-decoration: none;
+							color: #B3B1B2;
+						}
+					}
+				}
+
+				&::after {
+					z-index: -1;
+					content:'';
+					position: absolute;
+					bottom: -8px;
+					left: 50%;
+					transform: translateX(-50%);
+					width: 0;
+					height: 0;
+					border-style: solid;
+					border-width: 15px 10px 0 10px;
+					border-color: #ffffff transparent transparent transparent;
+
+				}
+			}
+		}
+
+
+		.circle {
+			display: block;
+			background: black;
+			border-radius: 100%;
+			height: 40px;
+			width: 40px;
+			margin: 0;
+			background: radial-gradient(circle at 40px 40px, #5cabff, #000);
+			position: absolute;
+			top: 50%;
+			left: 50%;
+
+
+		}
+	}
+}

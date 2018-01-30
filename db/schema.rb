@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180129125656) do
+ActiveRecord::Schema.define(version: 20180130164650) do
 
   create_table "avatars", force: :cascade do |t|
     t.string "name", null: false
@@ -23,6 +23,111 @@ ActiveRecord::Schema.define(version: 20180129125656) do
     t.integer "force", default: 5
     t.integer "agility", default: 5
     t.integer "inteligence", default: 5
+    t.integer "id_sword"
+    t.integer "gold", default: 0
+    t.integer "id_shield"
+    t.integer "id_armor"
+    t.integer "nextLevel", default: 50
+    t.integer "job_id"
+    t.integer "user_id"
+    t.integer "inventory_id"
+    t.index ["inventory_id"], name: "index_avatars_on_inventory_id"
+    t.index ["job_id"], name: "index_avatars_on_job_id"
+    t.index ["user_id"], name: "index_avatars_on_user_id"
+  end
+
+  create_table "chest_in_rooms", force: :cascade do |t|
+    t.integer "room_id"
+    t.integer "chest_id"
+    t.index ["chest_id"], name: "index_chest_in_rooms_on_chest_id"
+    t.index ["room_id"], name: "index_chest_in_rooms_on_room_id"
+  end
+
+  create_table "chests", force: :cascade do |t|
+    t.integer "gold"
+  end
+
+  create_table "donjons", force: :cascade do |t|
+    t.string "name"
+    t.integer "level"
+  end
+
+  create_table "ingredients", force: :cascade do |t|
+    t.integer "item_id"
+    t.integer "recipe_id"
+    t.index ["item_id"], name: "index_ingredients_on_item_id"
+    t.index ["recipe_id"], name: "index_ingredients_on_recipe_id"
+  end
+
+  create_table "inventories", force: :cascade do |t|
+    t.integer "avatar_id"
+    t.integer "monster_id"
+    t.index ["avatar_id"], name: "index_inventories_on_avatar_id"
+    t.index ["monster_id"], name: "index_inventories_on_monster_id"
+  end
+
+  create_table "item_in_chests", force: :cascade do |t|
+    t.integer "chest_id"
+    t.integer "item_id"
+    t.index ["item_id"], name: "index_item_in_chests_on_item_id"
+    t.index [nil], name: "index_item_in_chests_on_room_id"
+  end
+
+  create_table "items", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.integer "rarity", default: 0
+    t.integer "health", default: 0
+    t.integer "force", default: 0
+    t.integer "agility", default: 0
+    t.integer "price", default: 0
+    t.integer "defence", default: 0
+  end
+
+  create_table "jobs", force: :cascade do |t|
+    t.string "name"
+  end
+
+  create_table "monster_in_rooms", force: :cascade do |t|
+    t.integer "room_id"
+    t.integer "monster_id"
+    t.index ["monster_id"], name: "index_monster_in_rooms_on_monster_id"
+    t.index ["room_id"], name: "index_monster_in_rooms_on_room_id"
+  end
+
+  create_table "monsters", force: :cascade do |t|
+    t.string "name"
+    t.integer "hp"
+    t.integer "strong"
+    t.integer "agility"
+    t.integer "exp"
+    t.integer "defence"
+    t.integer "gold"
+    t.integer "inventory_id"
+    t.index ["inventory_id"], name: "index_monsters_on_inventory_id"
+  end
+
+  create_table "pockets", force: :cascade do |t|
+    t.integer "inventory_id"
+    t.integer "item_id"
+    t.index ["inventory_id"], name: "index_pockets_on_inventory_id"
+    t.index ["item_id"], name: "index_pockets_on_item_id"
+  end
+
+  create_table "recipes", force: :cascade do |t|
+    t.integer "item_id"
+    t.index ["item_id"], name: "index_recipes_on_item_id"
+  end
+
+  create_table "room_in_donjons", force: :cascade do |t|
+    t.integer "room_id"
+    t.integer "donjon_id"
+    t.index ["donjon_id"], name: "index_room_in_donjons_on_donjon_id"
+    t.index ["room_id"], name: "index_room_in_donjons_on_room_id"
+  end
+
+  create_table "rooms", force: :cascade do |t|
+    t.string "name"
   end
 
   create_table "users", force: :cascade do |t|
@@ -39,6 +144,9 @@ ActiveRecord::Schema.define(version: 20180129125656) do
     t.string "last_sign_in_ip"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "role"
+    t.integer "avatar_id"
+    t.index ["avatar_id"], name: "index_users_on_avatar_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true

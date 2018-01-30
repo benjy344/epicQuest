@@ -1,0 +1,43 @@
+<% if rooms.any? %>
+	<% count = 0 %>
+ 	<% rooms.each do |room| %>
+		<% count = count+1 %>
+		<section class="room js-room js-room-<%= count %><% if count === 1 %> active <% end %>">
+			<%= room.name %>
+
+
+			<figure class="avatar circle interactive">
+				<div class="tooltip">
+					<header><h3><%= @avatar.name %></h3></header>
+					<section>
+						<ul>
+							<li>Sword</li>
+							<li>Shield</li>
+							<li>Armor</li>
+						</ul>
+					</section>
+				</div>
+			</figure>
+
+			<% room.chests.each do |chest| %>
+
+				<figure class="chest circle interactive" style="left: 80%;">
+					<div class="tooltip">
+						<header><h3>Chest</h3></header>
+						<section>
+							<ul>
+								<% if chest.items.count === 0 %>
+									<li>Empty..</li>
+								<% else %>
+									<% chest.items.each do |item| %>
+									<li><%= item.name %></li>
+									<% end %>
+								<% end %>
+							</ul>
+						</section>
+					</div>
+				</figure>
+			<% end %>
+		</section>
+	<% end %>
+<% end %>

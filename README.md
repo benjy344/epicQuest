@@ -13,6 +13,8 @@ Models :
 	Room
 	Object
 	Chest
+	inventory
+	pocket
 
 Techno :
 	Ruby on Rails

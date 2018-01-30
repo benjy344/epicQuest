@@ -20,5 +20,5 @@ class User < ApplicationRecord
   	end
   end
 
-  # has_one :avatar
+  has_one :avatar
 end

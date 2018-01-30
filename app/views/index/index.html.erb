@@ -1,8 +1,31 @@
 <h1>Epic Quest</h1>
 
-<p>
-	<%= link_to 'Commencer', new_user_session_path, class: 'btn' %>
-</p>
+<% if user_signed_in? %>
+
+<% if current_user.avatar.nil? %>
+  <p>
+    <%= link_to 'Create avatar', new_avatar_path, class: 'btn' %>
+  </p>
+<% else %>
+  <!-- <p>
+    <%# link_to 'mon avatar', current_user.avatar, class: 'btn' %>
+  </p> -->
+  <p>
+    <%= link_to 'World map', root_path, class: 'btn' %>
+  </p>
+  <% if current_user.avatar.countUnlockDonjon > 1 %>
+  <p>
+    <%= link_to 'Town', root_path, class: 'btn' %>
+  </p>
+  <% end %>
+<% end %>
+
+
+<% else %>
+  <p>
+    <%= link_to 'Start', new_user_session_path, class: 'btn' %>
+  </p>
+<% end %>
 
 <ul class="bg-bubbles">
   <li></li>

@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Donjons</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Level</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @donjons.each do |donjon| %>
+      <tr>
+        <td><%= donjon.name %></td>
+        <td><%= donjon.level %></td>
+        <td><%= link_to 'Show', donjon %></td>
+        <td><%= link_to 'Edit', edit_donjon_path(donjon) %></td>
+        <td><%= link_to 'Destroy', donjon, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Donjon', new_donjon_path %>

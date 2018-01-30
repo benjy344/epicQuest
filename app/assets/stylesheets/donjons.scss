@@ -1,0 +1,95 @@
+.donjons {
+	margin: 0 auto;
+}
+.donjon {
+	min-height: 100vh;
+	min-width: 100vw;
+	$c1: linear-gradient(90deg, #2C3E50 10%, #4CA1AF 90%);
+	$c2: linear-gradient(90deg, #1D4350 10%, #A43931 90%);
+	$c3: linear-gradient(90deg, #4B79A1 10%, #283E51 90%);
+	$c4: linear-gradient(90deg, #2980b9 10%, #2C3E50 90%);
+	$c5: linear-gradient(90deg, #5A3F37 10%, #2C7744 90%);
+	$c6: linear-gradient(90deg, #403A3E 10%, #BE5869 90%);
+	$colors: $c1, $c2, $c3, $c4, $c5, $c6;
+
+	$class-slug: color !default;
+
+	@for $i from 1 through 6 {
+		&.#{$class-slug}-#{$i} {
+	    	background: nth( $colors, $i );
+
+	    	h1::after {
+	    		background: nth( $colors, $i );
+	    	}
+		}
+	}
+
+	.titleScreen {
+		position: fixed;
+		z-index: 3;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		background: rgba(#242322, .7);
+		color: white;
+		text-align: center;
+		font-family: 'Roboto', sans-serif;
+
+		h1 {
+			font-size: 2rem;
+			text-align: center;
+			font-weight: 100;
+			margin-top: 40vh;
+			margin-bottom: 80px;
+			position: relative;
+			text-transform: uppercase;
+
+			&::before {
+				content: "";
+				height: 1px;
+				width: 700px;
+				background: white;
+				position: absolute;
+				top: -80px;
+				left:50%;
+				transform: translateX(-50%);
+			}
+			&::after {
+				content: "";
+				height: 30px;
+				width: 30px;
+				border: 1px solid white;
+				position: absolute;
+				top: -94px;
+				left:50%;
+				transform: translateX(-50%) rotate(-135deg);
+			}
+		}
+
+		.start {
+			border: 1px solid white;
+			padding: 10px 40px;
+			cursor: pointer;
+			color: white;
+			background: transparent;
+			text-transform: uppercase;
+			margin-top: 80px;
+			transition: all .5s ease;
+			outline: none;
+
+			&:hover {
+				background: rgba(#fff, .2);
+				transition: all .5s ease;
+			}
+		}
+
+		.stats {
+			span {
+				margin: 0 20px;
+				font-weight: 100;
+			}
+		}
+	}
+
+}

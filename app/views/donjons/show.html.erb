@@ -1,0 +1,16 @@
+<div class="donjon color-<%= rand(1..6) %>">
+
+
+	<div class="titleScreen">
+		<h1><%= @donjon.name %></h1>
+		<div class="stats">
+			<span><b><%= @donjon.rooms.length %></b> Room<% if @donjon.rooms.length > 1 %>s<% end %></span>
+			<span><b><%= @count_chest %></b> Chest<% if @count_chest > 1 %>s<% end %></span>
+			<span><b><%= @count_monster %></b> Monster<% if @count_monster > 1 %>s<% end %></span>
+		</div>
+		<button class="start js-start">Enter</button>
+	</div>
+
+	<%= render partial: 'rooms/rooms_list' , locals: {rooms: @donjon.rooms} %>
+
+</div>
