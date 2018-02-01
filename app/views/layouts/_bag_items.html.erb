@@ -1,0 +1,74 @@
+<% if items.any? %>
+	<header>
+		<h3>Items</h3>
+	</header>
+	<ul>
+		<% results = items.ids.inject({}) do |hash, key|
+	  		hash.include?(key) ? hash[key] += 1 : hash[key] = 1;
+	  		hash
+		end %>
+
+ 	<% results.each do |r| %>
+		<%# r[0] == id , r[1] == number %>
+		<% @item = items.find(r[0])%>
+
+		<li>
+			<h5 class="js-item-to-extend">
+				<%= @item.name %>
+				<% if current_user.avatar.id_sword === r[0] || current_user.avatar.id_shield === r[0] || current_user.avatar.id_armor === r[0]%>
+					<% if r[1] - 1 <= 0 %>
+						<span class="fit">fit</span>
+					<% else %>
+						<span class="nbItem"><%= r[1] - 1%></span><span class="fit">fit</span>
+					<% end %>
+				<% else %>
+					<span class="nbItem"><%= r[1]%></span>
+				<% end %>
+			</h5>
+
+
+		<% if scope != "" %>
+			<div class="description js-description">
+			<% if !@item.description.nil? && @item.description != "" %><p><%= @item.description %></p> <%end%>
+			<% if !@item.rarity.nil? && @item.rarity > 0%><span>Rareté : <%= @item.rarity %></span> <%end%>
+			<% if !@item.force.nil? && @item.force > 0%><span>Force : +<%= @item.force %></span> <%end%>
+			<% if !@item.agility.nil? && @item.agility > 0%><span>Agilité : +<%= @item.agility %></span> <%end%>
+			<% if !@item.health.nil? && @item.health > 0%><span>Santé : +<%= @item.health %></span> <%end%>
+			<%# link_to 'Supprimer', {controller: "avatars", action: "removeObjetById", objet_id: @item.id }, class: "js-remove-object btn btn--white", remote: true %>
+
+			<!-- s'équipé d'une arme -->
+			<% if @item.category === "Santé" && !@item.health.nil? && @item.health > 0 %>
+				<%# link_to 'Se Soigner', {controller: "avatars", action: "restorHpWithObject", objet_id: @item.id }, class: "js-remove-object btn btn--white", remote: true %>
+			<% end %>
+
+			<!-- s'équipé d'une arme -->
+			<% if @item.category === "sword" && !@item.force.nil? && @item.force > 0 && current_user.avatar.id_sword != @item.id %>
+				<button class="btn js-sit-sword" data-obj-id="@item.id">Sit</button>
+				<%# link_to 'Équiper', {controller: "avatars", action: "equipeObjet", objet_id: @item.id }, class: "js-remove-object btn btn--white", remote: true %>
+			<% end %>
+
+			<!-- s'équipé d'une armure -->
+			<% if @item.category === "Armure" && !@item.defence.nil? && @item.defence > 0 && !@item.agility.nil? && @item.agility > 0 && current_user.avatar.id_shield != @item.id %>
+				<%# link_to 'Équiper', {controller: "avatars", action: "equipeObjet", objet_id: @item.id }, class: "js-remove-object btn btn--white", remote: true %>
+			<% end %>
+
+			<!-- s'équipé d'un objet de défence -->
+			<% if @item.category === "Défence" && !@item.defence.nil? && @item.defence > 0 && current_user.avatar.id_armor != @item.id %>
+				<%# link_to 'Équiper', {controller: "avatars", action: "equipeObjet", objet_id: @item.id }, class: "js-remove-object btn btn--white", remote: true %>
+			<% end %>
+
+			<% if current_user.avatar.id_sword == @item.id || current_user.avatar.id_shield == @item.id || current_user.avatar.id_armor == @item.id %>
+				<p>Vous étes équipé</p>
+			<% end %>
+
+			</div>
+		<% end %>
+
+
+	</li>
+	<% end %>
+</ul>
+
+<% else %>
+<p>Pas d'objet... </p>
+<% end %>

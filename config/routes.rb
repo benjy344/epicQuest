@@ -11,4 +11,9 @@ Rails.application.routes.draw do
 	root 'index#index'
   	devise_for :users
   	# For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+
+
+  get 'town'                    => 'index#town'
+  get 'finishDonjon'            => 'avatars#finishDonjon'
+  get 'addItemById'             => 'avatars#addItemById'
 end

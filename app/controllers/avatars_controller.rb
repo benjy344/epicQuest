@@ -10,8 +10,10 @@ class AvatarsController < ApplicationController
     if @avatar.name == ""
       @avatar.update(name: current_user.username)
     end
-    @user = current_user
-    @user.avatar = @avatar
+
+    @user           = current_user
+    @user.avatar    = @avatar
+    @user.avatar_id = @avatar.id
     respond_to do |format|
       if @avatar.save
         format.html { redirect_to donjon_path(1), notice: 'Avatar was successfully created.' }
@@ -30,6 +32,31 @@ class AvatarsController < ApplicationController
   end
 
   def destroy
+  end
+
+  def addItemById
+    @avatar = current_user.avatar
+    @item   = Item.find(params[:item_id])
+
+    @avatar.inventory.items << @item
+  end
+
+  def finishDonjon
+    @avatar       = current_user.avatar
+    @LevelWin     = Donjon.find(params[:donjon_id]).level + 1
+    @currentLevel = @avatar.countUnlockDonjon
+
+    if @LevelWin > @currentLevel
+      @currentLevel = @LevelWin
+    end
+
+    @avatar.update(countUnlockDonjon: @currentLevel)
+
+    respond_to do |format|
+        format.html { redirect_to town_path, notice: 'Avatar was successfully updated.' }
+        format.json { render :show, status: :ok, location: @avatar }
+    end
+
   end
 
   def index

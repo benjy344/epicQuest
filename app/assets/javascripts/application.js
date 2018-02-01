@@ -22,4 +22,14 @@ $(document).ready(function(){
 	    $('.js-main-nav').toggleClass('open')
 	    return false;
 	})
+
+	$('body').find('.js-item-to-extend').on('click', function(e) {
+		$(this).parent().toggleClass('expend');
+	})
+
+	$('body').find('.inventoyButton, .js-close-bag').on('click', function(e) {
+		$('body').find('#inventory').toggleClass('open');
+	})
+
 })
+
