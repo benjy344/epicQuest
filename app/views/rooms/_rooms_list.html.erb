@@ -19,6 +19,63 @@
 				</div>
 			</figure>
 
+			<% room.monsters.each do |monster| %>
+				<figure class="monster interactive">
+					<div class="tooltip">
+						<header><h3><%= monster.name %></h3></header>
+						<section>
+							<ul>
+								<li>A shadow is hiding in the smoke..</li>
+								<li class="js-get-fight" data-monster= '{
+									"name"    : "<%= monster.name%>",
+									"hp"      : <%= monster.hp%>,
+									"hpMax"   : <%= monster.hp%>,
+									"exp"     : <%= monster.exp%>,
+									"force"   : <%= monster.strong%>,
+									"agility" : <%= monster.agility%>,
+									"defence" : <%= monster.defence%>
+									}'>Attack</li>
+							</ul>
+						</section>
+					</div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+					<div class="smoke"></div>
+				</figure>
+			<% end %>
+
 			<% room.chests.each do |chest| %>
 
 				<figure class="chest circle interactive" style="left: 80%;">
@@ -71,12 +128,14 @@
 							    <% else %>
 							    <li class="js-next-room" data-next="<%= count+1 %>">Next room</li>
 								<% end %>
-								<% if count-1 > 1 %>
+								<% if count-1 > 0 %>
 									<li class="js-prev-room" data-next="<%= count-1 %>">Previous room</li>
 								<% else %>
-									<li class="finish"">
-								    	<%= link_to 'Leave the dungeon', town_path %>
-							    	</li>
+									<% if current_user.avatar.countUnlockDonjon>1 %>
+										<li class="finish"">
+									    	<%= link_to 'Leave the dungeon', town_path %>
+								    	</li>
+								    <% end %>
 								<% end %>
 								<li>The stairs are closed .. A monster must have the key</li>
 							</ul>

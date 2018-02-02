@@ -10,37 +10,12 @@ $nextRoomBtn  = null
 $prevRoomBtn  = null
 $addItem      = null
 
+
+
+
+
 $(document).ready () ->
-	$introScreen  = $('body').find '.titleScreen'
-	$starBtn      = $introScreen.find '.js-start'
-
-	$rooms        = $('body').find '.js-room'
-	$interactives = $rooms.find '.interactive'
-	$nextRoomBtn  = $rooms.find '.js-next-room'
-	$prevRoomBtn  = $rooms.find '.js-prev-room'
-	$addItem      = $rooms.find '.js-add-item'
-
-	$starBtn.on 'click', skipIntro
-
-	$interactives.on 'click', toggleTooltip
-
-	$nextRoomBtn.on 'click', ChangeRoom
-	$prevRoomBtn.on 'click', ChangeRoom
-	$addItem.on 'click', (e) ->
-		e.stopPropagation()
-		$_this  = $(this)
-		$itemId = $_this.attr 'data-item-id'
-		$.ajax({
-	      type: "get",
-	      url: "/addItemById?item_id=#{$itemId}"
-	      success: (data)->
-	      	console.log 'render bag'
-
-
-	    })
-		if $_this.next().length is 0 && $_this.prev().length is 0
-			$_this.parent().append('<li>Empty...</li>')
-		$_this.remove()
+	init()
 
 
 

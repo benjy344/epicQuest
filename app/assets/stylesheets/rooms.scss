@@ -52,6 +52,7 @@
 			}
 
 			.tooltip {
+				z-index: 2;
 				opacity: 0;
 				pointer-events: none;
 				transition: opacity .4s ease-in;
@@ -139,6 +140,27 @@
 			left: 50%;
 
 
+		}
+
+		.monster {
+			position: absolute;
+			top: 70%;
+			left: 20%;
+			height: 50px;
+			width: 50px;
+			border-radius: 50px;
+			background: rgba(#242322, .9);
+			.smoke {
+			    background: linear-gradient(to top left, #556270 , #FF6B6B);
+			    width: 160px;
+			    height: 160px;
+			    border-radius: 50%;;
+			    position: absolute;
+			    top: calc(50% - 80px);
+			    left: calc(50% - 80px);
+			    z-index: 1;
+			    mix-blend-mode: lighten;
+			}
 		}
 	}
 }

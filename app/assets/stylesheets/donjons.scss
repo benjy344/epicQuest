@@ -21,6 +21,9 @@
 	    	h1::after {
 	    		background: nth( $colors, $i );
 	    	}
+	    	.fightplace {
+	    		background: nth( $colors, $i );
+	    	}
 		}
 	}
 
@@ -89,6 +92,20 @@
 				margin: 0 20px;
 				font-weight: 100;
 			}
+		}
+	}
+
+	.fightplace {
+		position: fixed;
+		height: 100vh;
+		width: 100vw;
+		top: -100vh;
+		left: -100vw;
+		z-index: 3;
+
+		&.visible {
+			top: 0;
+			left: 0;
 		}
 	}
 

@@ -1,5 +1,8 @@
-<div class="donjon color-<%= rand(1..6) %>">
-
+<%
+	random    = rand(1..6)
+	className = "color-#{random}"
+%>
+<div class="donjon <%= className %>">
 
 	<div class="titleScreen">
 		<h1><%= @donjon.name %></h1>
@@ -12,5 +15,6 @@
 	</div>
 
 	<%= render partial: 'rooms/rooms_list' , locals: {rooms: @donjon.rooms} %>
+	<%= render partial: 'fight_place', locals: {avatar: @avatar, scope: @avatar} %>
 
 </div>

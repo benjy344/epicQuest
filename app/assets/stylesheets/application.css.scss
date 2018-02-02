@@ -1250,6 +1250,10 @@ body {
     vertical-align: middle;
     width: 1em;
 
+    &:hover {
+      background: transparent;
+    }
+
     &::before {
       background: $primary-color;
       content: "";
@@ -1414,6 +1418,7 @@ body {
   border: none;
   outline: none;
   cursor: pointer;
+  z-index: 9;
 
   &::after {
     content: "";
@@ -1433,11 +1438,13 @@ body {
   height: 100vh;
   top:100vh;
   left:0;
+  z-index: 10;
   background: rgba(#242322, .8);
   display: flex;
   justify-content: space-around;
   align-items: center;
   transition: all .8s ease-in;
+  text-align: left;
 
   .close {
     position: absolute;
@@ -1472,6 +1479,7 @@ body {
 
   .bag-items {
     width: 30vw;
+    max-width: 330px;
     height: 70vh;
     background: white;
     border-radius: 10px;
@@ -1546,3 +1554,5 @@ body {
 
 
 }
+
+

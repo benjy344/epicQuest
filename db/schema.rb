@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180201121127) do
+ActiveRecord::Schema.define(version: 20180202130902) do
 
   create_table "avatars", force: :cascade do |t|
     t.string "name", null: false
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 20180201121127) do
     t.integer "job_id"
     t.integer "user_id"
     t.integer "inventory_id"
+    t.integer "defence"
     t.index ["inventory_id"], name: "index_avatars_on_inventory_id"
     t.index ["job_id"], name: "index_avatars_on_job_id"
     t.index ["user_id"], name: "index_avatars_on_user_id"

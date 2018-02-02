@@ -1,0 +1,49 @@
+<%
+
+if !@avatar.id_sword.nil? && @avatar.objets.where(id: @avatar.id_sword).count > 0
+ @forceArme = @avatar.objets.find(@avatar.id_sword).force
+ @agilityArme = @avatar.objets.find(@avatar.id_sword).agility
+else
+ @forceArme = 0
+ @agilityArme = 0
+end
+
+if !@avatar.id_shield.nil? && @avatar.objets.where(id: @avatar.id_shield).count >0
+ @defArme = @avatar.objets.find(@avatar.id_shield).defence
+ @agilityArme += @avatar.objets.find(@avatar.id_shield).agility
+else
+ @defArme = 0
+end
+
+if !@avatar.id_armor.nil? && @avatar.objets.where(id: @avatar.id_armor).count > 0 && @avatar.objets.where(id: @avatar.id_sword).count > 0
+ @defArme += @avatar.objets.find(@avatar.id_armor).defence
+ @agilityArme += @avatar.objets.find(@avatar.id_sword).agility
+end
+
+
+ %>
+
+<div class="fightplace js-fightplace">
+
+
+
+	<aside class="avatar-stats js-avatar-stats" data-avatar='{
+			  "hp" : <%= @avatar.hp %>,
+			  "maxHp": <%= @avatar.MaxHealth %>,
+			  "job" : "<%= @avatar.job.name %>",
+			  "exp" : <%= @avatar.exp %>,
+			  "level": <%= @avatar.level %>,
+			  "nextLevel": <%= @avatar.nextLevel %>,
+			  "agility": <%= @avatar.agility %>,
+			  "agilityW": <%= @agilityArme %>,
+			  "force" : <%= @avatar.force %>,
+			  "forceW" : <%= @forceArme %>,
+			  "defence" : <%= @avatar.defence %>,
+			  "defenceW" : <%= @defArme %>,
+			  "inteligence" : <%= @avatar.inteligence %>
+			}' data-hp="<%= @avatar.hp %>" data-maxHp="<%= @avatar.MaxHealth %>" data-job="<%= @avatar.job.name %>" data-exp="<%= @avatar.exp %>" data-level="<%= @avatar.level %>" data-force="<%= @avatar.force %>" data-inteligence="<%= @avatar.inteligence %>" data-agility="<%= @avatar.agility %>">
+		<h3><%= @avatar.name %></h3>
+
+	</aside>
+
+</div>
