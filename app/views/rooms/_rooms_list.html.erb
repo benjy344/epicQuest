@@ -19,7 +19,7 @@
 				</div>
 			</figure>
 
-			<% room.monsters.each do |monster| %>
+			<% rooms.last.monsters.each do |monster| %>
 				<figure class="monster interactive">
 					<div class="tooltip">
 						<header><h3><%= monster.name %></h3></header>
@@ -28,6 +28,7 @@
 								<li>A shadow is hiding in the smoke..</li>
 								<li class="js-get-fight" data-monster= '{
 									"name"    : "<%= monster.name%>",
+									"id"      : "<%= monster.id%>",
 									"hp"      : <%= monster.hp%>,
 									"hpMax"   : <%= monster.hp%>,
 									"exp"     : <%= monster.exp%>,

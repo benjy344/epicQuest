@@ -1,49 +1,74 @@
 <%
 
-if !@avatar.id_sword.nil? && @avatar.objets.where(id: @avatar.id_sword).count > 0
- @forceArme = @avatar.objets.find(@avatar.id_sword).force
- @agilityArme = @avatar.objets.find(@avatar.id_sword).agility
+if !@avatar.id_sword.nil? && @avatar.inventory.items.where(id: @avatar.id_sword).count > 0
+ @forceArme = @avatar.inventory.items.find(@avatar.id_sword).force
+ @agilityArme = @avatar.inventory.items.find(@avatar.id_sword).agility
 else
  @forceArme = 0
  @agilityArme = 0
 end
 
-if !@avatar.id_shield.nil? && @avatar.objets.where(id: @avatar.id_shield).count >0
- @defArme = @avatar.objets.find(@avatar.id_shield).defence
- @agilityArme += @avatar.objets.find(@avatar.id_shield).agility
+if !@avatar.id_shield.nil? && @avatar.inventory.items.where(id: @avatar.id_shield).count >0
+ @defArme = @avatar.inventory.items.find(@avatar.id_shield).defence
+ @agilityArme += @avatar.inventory.items.find(@avatar.id_shield).agility
 else
  @defArme = 0
 end
 
-if !@avatar.id_armor.nil? && @avatar.objets.where(id: @avatar.id_armor).count > 0 && @avatar.objets.where(id: @avatar.id_sword).count > 0
- @defArme += @avatar.objets.find(@avatar.id_armor).defence
- @agilityArme += @avatar.objets.find(@avatar.id_sword).agility
+if !@avatar.id_armor.nil? && @avatar.inventory.items.where(id: @avatar.id_armor).count > 0 && @avatar.inventory.items.where(id: @avatar.id_sword).count > 0
+ @defArme += @avatar.inventory.items.find(@avatar.id_armor).defence
+ @agilityArme += @avatar.inventory.items.find(@avatar.id_sword).agility
 end
 
 
  %>
 
-<div class="fightplace js-fightplace">
+<div class="fightplace js-fightplace" id="fightplace" v-bind:class="{ visible: visible }">
 
+	<div class="monster js-monster" id="fightMonster" style="text-align:center">
+		<div v-if="!monsterDead">
+			<p>{{ monster.name }}</p>
+			<div class="js-monster-hp monster-hp">
+				<div class="js-monster-current-hp monster-current-hp" :style="{width: percentHp(monster.hp, monsterMaxHp)+'%' }" ></div>
+			</div>
 
+			<div class="js-fight-buttons" style="width: 400px; margin:30px auto;">
+				<button class="btn" @click="attack()" :disabled="round">Attack</button>
+				<div class="btn js-trigger-menu">Look at the inventory</div>
+			</div>
+		</div>
+		<div v-if="monsterDead">
+			<p>You defeated the {{monster.name}}</p>
 
-	<aside class="avatar-stats js-avatar-stats" data-avatar='{
-			  "hp" : <%= @avatar.hp %>,
-			  "maxHp": <%= @avatar.MaxHealth %>,
-			  "job" : "<%= @avatar.job.name %>",
-			  "exp" : <%= @avatar.exp %>,
-			  "level": <%= @avatar.level %>,
-			  "nextLevel": <%= @avatar.nextLevel %>,
-			  "agility": <%= @avatar.agility %>,
-			  "agilityW": <%= @agilityArme %>,
-			  "force" : <%= @avatar.force %>,
-			  "forceW" : <%= @forceArme %>,
-			  "defence" : <%= @avatar.defence %>,
-			  "defenceW" : <%= @defArme %>,
-			  "inteligence" : <%= @avatar.inteligence %>
-			}' data-hp="<%= @avatar.hp %>" data-maxHp="<%= @avatar.MaxHealth %>" data-job="<%= @avatar.job.name %>" data-exp="<%= @avatar.exp %>" data-level="<%= @avatar.level %>" data-force="<%= @avatar.force %>" data-inteligence="<%= @avatar.inteligence %>" data-agility="<%= @avatar.agility %>">
+			<button class="button" v-if='monster.gold && restGold' @click="getGold()" >Get {{monster.gold}} Gold</button>
+		</div>
+
+	</div>
+
+	<aside class="avatar-stats js-avatar-stats">
 		<h3><%= @avatar.name %></h3>
+		<span class="level">Lvl : {{avatar.level}}</span>
+		<span class="job"> <%=@avatar.job.name %></span>
+		<div class="currsors">
+	        <div class="js-avatar-hp avatar-hp persent-content" data-hpMax="<%= @avatar.MaxHealth %>">
+	            <div class="js-avatar-current-hp avatar-current-hp persent" :style="{width: percentHp(avatar.hp, avatar.MaxHealth)+'%' }"></div>
+	            <span class="js-hpcount hpcount title-persent">HP : {{avatar.hp}}/{{avatar.MaxHealth}}</span>
+	        </div>
+	        <div class="js-avatar-exp avatar-exp persent-content">
+	            <div class="js-avatar-current-exp avatar-current-exp persent" :style="{width: percentHp(avatar.exp, avatar.nextLevel)+'%' }"></div>
+	            <span class="js-expcount expcount title-persent">Exp : {{avatar.exp}}/{{avatar.nextLevel}}</span>
+	        </div>
 
+	        <div class="carac">
+	            <span class="js-agility">Agility : <%= @avatar.agility %><% if @avatar.id_sword != 0 && !@avatar.id_sword.nil? && @avatar.inventory.items.where(id: @avatar.id_sword).count > 0 %> + <%= @avatar.inventory.items.find(@avatar.id_sword).agility %> <%end%><% if @avatar.id_armor != 0 && !@avatar.id_armor.nil? && @avatar.inventory.items.where(id: @avatar.id_armor).count > 0 %> + <%= @avatar.inventory.items.find(@avatar.id_armor).agility %> <%end%>
+	            </span>
+	            <span class="js-force">Strong : <%= @avatar.force %><% if @avatar.id_sword != 0 && !@avatar.id_sword.nil? && @avatar.inventory.items.where(id: @avatar.id_sword).count > 0 %> + <%= @avatar.inventory.items.find(@avatar.id_sword).force %> <%end%></span>
+	            <span class="js-defence">Defence : <%= @avatar.defence %><% if @avatar.id_shield != 0 && !@avatar.id_shield.nil? && @avatar.inventory.items.where(id: @avatar.id_shield).count > 0 %> + <%= @avatar.inventory.items.find(@avatar.id_shield).defence %> <%end%><% if @avatar.id_armor != 0 && !@avatar.id_armor.nil? && @avatar.inventory.items.where(id: @avatar.id_armor).count > 0 %> + <%= @avatar.inventory.items.find(@avatar.id_armor).defence %> <%end%>
+
+	            </span>
+	        </div>
+	    </div>
 	</aside>
+</div>
 
 </div>

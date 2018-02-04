@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 20180202130902) do
     t.integer "job_id"
     t.integer "user_id"
     t.integer "inventory_id"
-    t.integer "defence"
+    t.integer "defence", default: 5
     t.index ["inventory_id"], name: "index_avatars_on_inventory_id"
     t.index ["job_id"], name: "index_avatars_on_job_id"
     t.index ["user_id"], name: "index_avatars_on_user_id"

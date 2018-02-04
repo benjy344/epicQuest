@@ -16,4 +16,10 @@ Rails.application.routes.draw do
   get 'town'                    => 'index#town'
   get 'finishDonjon'            => 'avatars#finishDonjon'
   get 'addItemById'             => 'avatars#addItemById'
+  get 'majAvatar'               => 'avatars#majAvatar'
+  get 'gameover'                => 'index#gameover'
+  get 'addGold'                 => 'avatars#addGold'
+  get 'sitItem'                 => 'avatars#sitItem'
+  get 'unsitItem'               => 'avatars#unsitItem'
+  get 'craft'                   => 'avatars#craft'
 end

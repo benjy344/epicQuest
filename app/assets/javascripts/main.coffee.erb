@@ -1,0 +1,93 @@
+$rooms   = $('body').find( '.js-room' )
+$addItem = $rooms.find( '.js-add-item' )
+
+if !inventory?
+	inventory = new Vue
+		el: '#v-inventory'
+		data:
+			open: false
+			avatar: {}
+			items: []
+			sortedItems: []
+			expend: null
+			almanachExpend: null
+			almanach: []
+		methods:
+			isSitedObject: (id) ->
+				return (id == this.avatar.id_sword || this.avatar.id_armor || this.avatar.id_shield)
+			setFocus: (index) ->
+				this.expend = if this.expend == index then null else index
+			setAlmanachFocus: (index) ->
+				this.almanachExpend = if this.almanachExpend == index then null else index
+			sitObject: (id) ->
+				_this = this
+				$.get
+					url: "/sitItem?item_id=#{id}"
+					success: (data)->
+						_this.loadData()
+
+			unsitObject: (id) ->
+				_this = this
+				$.get
+					url: "/unsitItem?item_id=#{id}"
+					success: (data)->
+						_this.loadData()
+			addToAlmanash: (item) ->
+				this.almanach.push item
+			addItem: (id) ->
+				$.ajax
+			      	type: "get",
+			      	url: "/addItemById?item_id=#{id}"
+			craft: ->
+				string = ""
+				for item, index in this.almanach
+					if index is this.almanach.length-1
+						string += item.id
+					else
+						string += item.id+','
+
+				console.log string
+				$.ajax
+			      	type: "get",
+			      	url: "/craft?items=#{string}"
+			      	success: (res) ->
+			      		console.log res
+			loadData: (cb) ->
+				_this = this
+				$.get
+					url: "/avatars/#{$('.js-user-info').attr('data-avatar-id')}.json"
+					success: (data)->
+						_this.avatar = data.avatar
+						_this.items  = data.items
+						for item, index in _this.items
+							item.count = 0
+							for itemCount, indexCount in _this.items when itemCount.id is item.id
+								item.count++
+							aleradyExist = false
+							for sortedItem in _this.sortedItems when item.id is sortedItem.id
+								aleradyExist = true
+							_this.sortedItems.push item if !aleradyExist
+						cb() if cb?
+			toggle: ->
+				if this.open
+					this.open = !this.open
+				else
+					this.loadData( -> this.open = !this.open)
+
+
+
+if $addItem.length
+	$addItem.off 'click'
+	$addItem.on 'click', (e) ->
+		e.preventDefault()
+		e.stopPropagation()
+		$_this = $(this)
+		itemId = $_this.attr('data-item-id')
+		inventory.addItem itemId
+
+		if $_this.next().length is 0 && $_this.prev().length is 0
+			$_this.parent().append('<li>Empty...</li>')
+
+		$_this.off('click')
+		$_this.remove()
+

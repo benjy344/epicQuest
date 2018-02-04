@@ -2,7 +2,7 @@
 	random    = rand(1..6)
 	className = "color-#{random}"
 %>
-<div class="donjon <%= className %>">
+<div class="js-donjon donjon <%= className %>" data-donjon-id="<%= @donjon.id %>">
 
 	<div class="titleScreen">
 		<h1><%= @donjon.name %></h1>

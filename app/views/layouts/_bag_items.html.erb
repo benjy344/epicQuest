@@ -1,74 +1,26 @@
-<% if items.any? %>
-	<header>
-		<h3>Items</h3>
-	</header>
-	<ul>
-		<% results = items.ids.inject({}) do |hash, key|
-	  		hash.include?(key) ? hash[key] += 1 : hash[key] = 1;
-	  		hash
-		end %>
+<header>
+	<h3>Items</h3>
+</header>
+<ul v-if="sortedItems.length > 0">
+	<li v-for="(item, index) in sortedItems" :class="{expend:expend == index}">
+		<h5 class="js-item-to-extend" @click="setFocus(index)" >{{item.name}} <span v-if="(isSitedObject(item.id) && item.count>2) || (!isSitedObject(item.id) && item.count>1)" class="nbItem">{{isSitedObject(item.name)?item.count-1:item.count}}</span> <span v-if="isSitedObject(item.id)" class="fit">fit</span></h5>
+		<div class="description js-description">
+			<p>{{item.description}}</p>
 
- 	<% results.each do |r| %>
-		<%# r[0] == id , r[1] == number %>
-		<% @item = items.find(r[0])%>
-
-		<li>
-			<h5 class="js-item-to-extend">
-				<%= @item.name %>
-				<% if current_user.avatar.id_sword === r[0] || current_user.avatar.id_shield === r[0] || current_user.avatar.id_armor === r[0]%>
-					<% if r[1] - 1 <= 0 %>
-						<span class="fit">fit</span>
-					<% else %>
-						<span class="nbItem"><%= r[1] - 1%></span><span class="fit">fit</span>
-					<% end %>
-				<% else %>
-					<span class="nbItem"><%= r[1]%></span>
-				<% end %>
-			</h5>
-
-
-		<% if scope != "" %>
-			<div class="description js-description">
-			<% if !@item.description.nil? && @item.description != "" %><p><%= @item.description %></p> <%end%>
-			<% if !@item.rarity.nil? && @item.rarity > 0%><span>Rareté : <%= @item.rarity %></span> <%end%>
-			<% if !@item.force.nil? && @item.force > 0%><span>Force : +<%= @item.force %></span> <%end%>
-			<% if !@item.agility.nil? && @item.agility > 0%><span>Agilité : +<%= @item.agility %></span> <%end%>
-			<% if !@item.health.nil? && @item.health > 0%><span>Santé : +<%= @item.health %></span> <%end%>
-			<%# link_to 'Supprimer', {controller: "avatars", action: "removeObjetById", objet_id: @item.id }, class: "js-remove-object btn btn--white", remote: true %>
-
-			<!-- s'équipé d'une arme -->
-			<% if @item.category === "Santé" && !@item.health.nil? && @item.health > 0 %>
-				<%# link_to 'Se Soigner', {controller: "avatars", action: "restorHpWithObject", objet_id: @item.id }, class: "js-remove-object btn btn--white", remote: true %>
-			<% end %>
-
-			<!-- s'équipé d'une arme -->
-			<% if @item.category === "sword" && !@item.force.nil? && @item.force > 0 && current_user.avatar.id_sword != @item.id %>
-				<button class="btn js-sit-sword" data-obj-id="@item.id">Sit</button>
-				<%# link_to 'Équiper', {controller: "avatars", action: "equipeObjet", objet_id: @item.id }, class: "js-remove-object btn btn--white", remote: true %>
-			<% end %>
-
-			<!-- s'équipé d'une armure -->
-			<% if @item.category === "Armure" && !@item.defence.nil? && @item.defence > 0 && !@item.agility.nil? && @item.agility > 0 && current_user.avatar.id_shield != @item.id %>
-				<%# link_to 'Équiper', {controller: "avatars", action: "equipeObjet", objet_id: @item.id }, class: "js-remove-object btn btn--white", remote: true %>
-			<% end %>
-
-			<!-- s'équipé d'un objet de défence -->
-			<% if @item.category === "Défence" && !@item.defence.nil? && @item.defence > 0 && current_user.avatar.id_armor != @item.id %>
-				<%# link_to 'Équiper', {controller: "avatars", action: "equipeObjet", objet_id: @item.id }, class: "js-remove-object btn btn--white", remote: true %>
-			<% end %>
-
-			<% if current_user.avatar.id_sword == @item.id || current_user.avatar.id_shield == @item.id || current_user.avatar.id_armor == @item.id %>
-				<p>Vous étes équipé</p>
-			<% end %>
-
+			<div class="caracteristics">
+				<span v-if="item.force>0"   >+{{item.force}}   </span>
+				<span v-if="item.defence>0" >+{{item.defence}} </span>
+				<span v-if="item.agility>0" >+{{item.agility}} </span>
+				<span v-if="item.health>0"  >+{{item.health}}  </span>
 			</div>
-		<% end %>
-
-
+			<div class="actions">
+				<button class="btn" v-if="!isSitedObject(item.id)" >Drop</button>
+				<button class="btn" v-if="(item.category != 'resource' && item.category != 'health') && !isSitedObject(item.id)" @click="sitObject(item.id)" >Sit</button>
+				<button class="btn" v-if="isSitedObject(item.id)" @click="unsitObject(item.id)">Unsit</button>
+				<button class="btn" v-if="(isSitedObject(item.id) && item.count>2) || (!isSitedObject(item.id) && item.count>0)"@click="addToAlmanash(item)">Add to the Almanach</button>
+			</div>
+		</div>
 	</li>
-	<% end %>
 </ul>
 
-<% else %>
-<p>Pas d'objet... </p>
-<% end %>
+<p v-if="sortedItems.length == 0">Empty... </p>

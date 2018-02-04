@@ -1,0 +1,21 @@
+<header>
+	<h3>Almanach</h3>
+</header>
+<ul v-if="almanach.length > 0">
+	<li v-for="(item, index) in almanach" :class="{expend:almanachExpend == index}">
+		<h5 class="js-item-to-extend" @click="setAlmanachFocus(index)" >{{item.name}}</h5>
+		<div class="description js-description">
+			<p>{{item.description}}</p>
+
+			<div class="caracteristics">
+				<span v-if="item.force>0"   >+{{item.force}}   </span>
+				<span v-if="item.defence>0" >+{{item.defence}} </span>
+				<span v-if="item.agility>0" >+{{item.agility}} </span>
+				<span v-if="item.health>0"  >+{{item.health}}  </span>
+			</div>
+		</div>
+	</li>
+</ul>
+<footer>
+	<button @click="craft()" :disabled="!(almanach.length > 1)" class="btn" >Craft</button>
+</footer>

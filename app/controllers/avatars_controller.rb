@@ -41,6 +41,92 @@ class AvatarsController < ApplicationController
     @avatar.inventory.items << @item
   end
 
+  def craft
+    @items          = params[:items].split(',')
+    @recipes        = Recipe.all
+    @goodIngredient = []
+
+    @recipes.each do |recipe|
+      temp = recipe.ingredients.where(item_id: @items.first)
+      if recipe.ingredients.count == @items.count && temp.count>0
+        @goodIngredient << recipe
+      end
+    end
+
+    @goodIngredient.each do |recipe|
+      counter = 0
+      recipe.ingredients.each do |ing|
+        @items.each do |item|
+
+          if (ing.item_id.to_i == item.to_i)
+            counter = counter+1
+            puts 'counter ++'
+          end
+        end
+        puts "===================>>>>"
+        puts counter
+        puts @items.count
+        puts counter == @items.count
+        puts "===================>>>>"
+        if counter == @items.count
+          @item = Item.find(recipe.item.id)
+          puts "==================="
+          puts @item.inspect
+          puts "==================="
+          puts "==================="
+        end
+      end
+
+      if counter == @items.count
+        @item = Item.find(recipe.item.id)
+        puts "==================="
+        puts @item.inspect
+        puts "==================="
+        puts "==================="
+      end
+    end
+  end
+
+  def sitItem
+    @avatar = current_user.avatar
+    @itemCategory = @avatar.inventory.items.where(id: params[:item_id]).first.category
+
+    if @itemCategory === "sword"
+      @avatar.update(id_sword: params[:item_id])
+    elsif @itemCategory === "armor"
+      @avatar.update(id_armor: params[:item_id])
+    elsif @itemCategory === "shield"
+      @avatar.update(id_shield: params[:item_id])
+    end
+
+  end
+
+  def unsitItem
+    @avatar = current_user.avatar
+    @itemCategory = @avatar.inventory.items.where(id: params[:item_id]).first.category
+
+    if @itemCategory === "sword"
+      @avatar.update(id_sword: nil)
+    elsif @itemCategory === "armor"
+      @avatar.update(id_armor: nil)
+    elsif @itemCategory === "shield"
+      @avatar.update(id_shield: nil)
+    end
+
+  end
+
+  def majAvatar
+    @avatar = current_user.avatar
+    @avatar.update(MaxHealth: params[:MaxHealth], hp: params[:hp], level: params[:level], nextLevel: params[:nextLevel],defence: params[:defence], agility: params[:agility], force: params[:force], inteligence: params[:inteligence], exp: params[:exp])
+  end
+
+  def addGold
+    @avatar = current_user.avatar
+    @currentGold = @avatar.gold.to_i
+    @newGold = @currentGold + params[:gold].to_i
+    @avatar.update(gold: @newGold)
+  end
+
   def finishDonjon
     @avatar       = current_user.avatar
     @LevelWin     = Donjon.find(params[:donjon_id]).level + 1

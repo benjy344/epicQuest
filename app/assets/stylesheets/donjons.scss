@@ -107,6 +107,79 @@
 			top: 0;
 			left: 0;
 		}
+
+		.monster {
+
+			.monster-hp {
+				position: relative;
+			    width: 200px;
+			    height: 8px;
+			    display: inline-block;
+			    background: #D3D3D3;
+			    margin: 20px 0;
+
+				.monster-current-hp {
+					position: absolute;
+					background: linear-gradient(to right, #4776e6, #8e54e9);
+					width: 20%;
+					height: 100%;
+					-webkit-transition: all 0.8s;
+					transition: all 0.8s;
+				}
+			}
+		}
+
+		.avatar-stats {
+			background: white;
+			border-radius: 6px;
+			padding: 10px 20px;
+			position: absolute;
+			bottom: 30px;
+			left: 30px;
+
+			.level {
+				position:absolute;
+				top:20px;
+				right: 20px;
+			}
+			.job {
+				position:absolute;
+				top:40px;
+				right: 20px;
+			}
+
+			.carac {
+				span {
+					margin: 10px;
+					display: inline-block;
+				}
+			}
+
+			.persent-content {
+			    position: relative;
+			    width: 80%;
+			    height: 8px;
+			    display: inline-block;
+			    background: #D3D3D3;
+			    margin: 20px 0;
+
+			    .persent {
+			        position: absolute;
+			        background: linear-gradient(to right, #4776e6, #8e54e9);
+			        width: 20%;
+			        height: 100%;
+			        -webkit-transition: all 0.8s;
+			        transition: all 0.8s;
+			    }
+
+			    .title-persent {
+			        position: absolute;
+			        top: -20px;
+			        left: 0;
+			        font-size: 15px;
+			    }
+			}
+		}
 	}
 
 }

@@ -16,10 +16,19 @@ class DonjonsController < ApplicationController
     @avatar        = @user.avatar
     @count_chest   = 0
     @count_monster = 0
+    @monsters      = []
+    @avatarItems   = @avatar.inventory.items
 
     @donjon.rooms.each do |r|
       @count_chest += r.chests.count
       @count_monster += r.monsters.count
+      r.monsters.each do |monster|
+        @monsters << monster
+      end
+    end
+    respond_to do |format|
+      format.html
+      format.json { render :json => {donjon: @donjon, rooms: @donjon.rooms, monsters: @monsters, avatar: @avatar, avatarItems: @avatarItems} }
     end
   end
 

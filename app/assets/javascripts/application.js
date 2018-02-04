@@ -11,34 +11,35 @@
 // about supported directives.
 //
 // require rails-ujs
-// require turbolinks
 //= require jquery
 //= require jquery_ujs
+//= require vue
+//= require vue-resource
+//= require vuex
+//= require ./main.coffee
 //= require_tree .
 
-$(document).ready(function(){
 
-	$('.js-toggle-nav, .overlay').click(function(){
-	    $('.js-main-nav').toggleClass('open')
-	    return false
-	})
+Vue.development_mode = true
 
-	$('body').find('.js-item-to-extend').on('click', function(e) {
-		$(this).parent().toggleClass('expend')
-	})
 
-	$('body').find('.inventoyButton, .js-close-bag').on('click', function(e) {
-		$('body').find('#inventory').toggleClass('open')
-	})
-
+$('.js-toggle-nav, .overlay').click(function(){
+    $('.js-main-nav').toggleClass('open')
+    return false
 })
 
+$('body').find('.js-item-to-extend').on('click', function(e) {
+	$(this).parent().toggleClass('expend')
+})
+
+$('body').find('.inventoryButton, .js-close-bag').on('click', function(e) {
+	$('body').find('#inventory').toggleClass('open')
+})
 init = function() {
 
 	console.log('init')
 	$introScreen  = $('body').find( '.titleScreen' )
 	$starBtn      = $introScreen.find( '.js-start' )
-
 	$rooms        = $('body').find( '.js-room' )
 	$interactives = $rooms.find( '.interactive' )
 	$nextRoomBtn  = $rooms.find( '.js-next-room' )
@@ -94,38 +95,8 @@ init = function() {
 		}
 	}
 
-	if($enterFight.length && $fightplace.length){
-		$enterFight.off('click')
-		$enterFight.on('click', function() {
-			$fightplace.addClass('visible')
-			monster = JSON.parse($(this).attr('data-monster'))
-			initFight(monster)
-		})
-
-	}
-
-	if($addItem.length) {
-		$addItem.off('click')
-		$addItem.on('click', function(e) {
-			e.preventDefault()
-			e.stopPropagation()
-			$_this  = $(this)
-			$itemId = $_this.attr('data-item-id')
-			$.ajax({
-		      	type: "get",
-		      	url: '/addItemById?item_id='+$itemId
-		    })
-
-			if($_this.next().length === 0 && $_this.prev().length === 0){
-				$_this.parent().append('<li>Empty...</li>')
-			}
-			$_this.off('click')
-			$_this.remove()
-		})
-	}
-
-
 }
+
 
 var ChangeRoom, skipIntro, toggleTooltip
 
@@ -157,3 +128,5 @@ ChangeRoom = function(e) {
 initFight = function(monster) {
 	console.log(monster)
 }
+
+init()

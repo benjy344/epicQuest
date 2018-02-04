@@ -1,0 +1,11 @@
+<div class="bg-black">
+	<h1>Game Over</h1>
+	<div class="contentAnimeText center">
+		<p class="annimTextWhite">Les monstres du donjons vous ont dépouillé d'une partie de votre or...</p>
+	</div>
+	<% if current_user.avatar.countUnlockDonjon === 1%>
+		<%= link_to "Recommencer", donjon_path(1), class: 'btn btn--white' %>
+	<% else %>
+		<%= link_to "Continuer", town_path, class: 'btn btn--white' %>
+	<% end %>
+</div>

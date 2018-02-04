@@ -9,17 +9,168 @@ $interactives = null
 $nextRoomBtn  = null
 $prevRoomBtn  = null
 $addItem      = null
+$rooms        = $('body').find( '.js-room' )
+$enterFight   = $rooms.find( '.js-get-fight' )
+$fightplace   = $('body').find( '.js-fightplace' )
+
+if !fightplace?
+	fightplace = new Vue
+		el: '#fightplace'
+		data:
+			visible: false
+			donjon: []
+			avatar: {}
+			avatarItems: []
+			monster: {}
+			sword:{}
+			armor:{}
+			shield:{}
+			monsterMaxHp: 0
+			round: false
+			monsterDead: false
+			restGold: true
+		mounted: () ->
+			_this = this
+			$.ajax
+				url: '/donjons/'+$('.js-donjon').attr('data-donjon-id')+'.json'
+				success: (res) ->
+					_this.donjon      = res
+					_this.avatar      = res.avatar
+					_this.avatarItems = res.avatarItems
+					for item in _this.avatarItems
+						switch item.id
+							when _this.avatar.id_sword  then _this.sword  = item
+							when _this.avatar.id_shield then _this.shield = item
+							when _this.avatar.id_armor  then _this.armor  = item
+		methods:
+			setMonster: (id) ->
+				this.visible = true
+				for monster, index in this.donjon.monsters when parseInt(monster.id) is parseInt(id)
+					this.monster      = monster
+					this.monsterMaxHp = this.monster.hp
+					this.restGold     = true if (this.monster.gold? && this.monster.gold>0)
+
+			renderAvatar: ->
+				url = window.location.origin+'/majAvatar?MaxHealth='+this.avatar.MaxHealth+'&hp='+this.avatar.hp+'&level='+this.avatar.level+'&nextLevel='+this.avatar.nextLevel+'&defence='+this.avatar.defence+'&agility='+this.avatar.agility+'&force='+this.avatar.force+'&inteligence='+this.avatar.inteligence+'&exp='+this.avatar.exp
+				$.get
+				  url: url
+				  dataType: "script"
+
+			gainExp: ->
+				this.avatar.exp += this.monster.exp
+
+				if this.avatar.exp >= this.avatar.nextLevel then this.levelUp()
+
+			getGold: ->
+				url = window.location.origin+'/addGold?gold='+this.monster.gold
+				this.restGold = false
+				$.get
+				  url: url
+
+			levelUp: ->
+				this.avatar.level += 1
+				this.avatar.exp = this.avatar.exp - this.avatar.nextLevel
+				this.avatar.nextLevel += (this.avatar.nextLevel*1.5)
+
+				switch this.avatar.job
+					when "Thief"
+						this.avatar.MaxHealth   += 3
+						this.avatar.hp          += 3
+						this.avatar.force       += 2
+						this.avatar.agility     += 4
+						this.avatar.inteligence += 3
+						this.avatar.defence     += 2
+
+						switch (this.avatar.level)
+							when 1
+								console.log 'maybe some special skills??'
+
+					when "Sentinel"
+						this.avatar.MaxHealth   += 4
+						this.avatar.hp          += 4
+						this.avatar.force       += 5
+						this.avatar.agility     += 2
+						this.avatar.inteligence += 2
+						this.avatar.defence     += 4
+					when "Mage"
+						this.avatar.MaxHealth   += 5
+						this.avatar.hp          += 5
+						this.avatar.force       += 3
+						this.avatar.agility     += 3
+						this.avatar.inteligence += 3
+						this.avatar.defence     += 3
+
+
+			percentHp: (value, valMax) ->
+				result =  if value > 0 then (value*100)/valMax else 0
+				return result
+
+			win: ->
+				this.gainExp()
+				this.renderAvatar()
+				_this = this
+				setTimeout ->
+					_this.round = false
+					_this.monsterDead = true
+				, 1000
+
+
+			gameOver: () ->
+				window.location.href = "/gameover"
+			attack: () ->
+				this.round = true
+				force = 9999 #this.avatar.force + this.sword.force
+				console.log this
+				avatarDefence = this.avatar.defence + this.shield.defence + this.armor.defence
+				if this.avatar.agility >= this.monster.agility
+					#si l'avatar est le plus rapide
+					#attaque le monstre
+					if ( Math.round( this.monster.hp - (force - (this.monster.defence / 2))) < this.monster.hp  )
+						this.monster.hp = Math.round( this.monster.hp - (force - (this.monster.defence / 2)))
+
+					else
+						this.monster.hp = this.monster.hp - 1
+
+					if (this.monster.hp <= 0)
+						#si le montre est KO => avatar WIN
+						this.monster.hp = 0
+						this.win()
+					else
+						#si le montre n'est pas KO, il attaque
+						if ( Math.round( this.avatar.hp - (this.monster.force - (avatarDefence / 2))) < this.avatar.hp  )
+							this.avatar.hp = Math.round( this.avatar.hp - (this.monster.force - (avatarDefence / 2)))
+						else
+							this.avatar.hp = this.avatar.hp - 1
+
+
+						if (this.avatar.hp <= 0)
+							this.avatar.hp = 0
+							this.renderAvatar()
+							#si l'avatar est KO => avatar loose
+							this.gameOver()
+						else
+							#l'avatar n'est pas mort, le combat continue
+							this.renderAvatar()
+							_this = this
+							setTimeout ->
+								_this.round = false
+							, 1000
 
 
 
 
 
-$(document).ready () ->
-	init()
+if $enterFight.length && $fightplace.length
+	$enterFight.off('click')
+	$enterFight.on 'click', ()->
+		$fightplace.addClass('visible')
+		monster = JSON.parse($(this).attr('data-monster'))
+		fightplace.setMonster(monster.id)
 
 
-
-
+$('.js-attack-button').off 'click'
+$('.js-attack-button').on 'click', (e)->
+	console.log 'fight'
 
 skipIntro = () ->
 	$introScreen.css {'display': 'none'}
