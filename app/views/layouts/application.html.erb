@@ -4,7 +4,7 @@
     <title>EpicQuest</title>
     <%= csrf_meta_tags %>
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <link href="https://fonts.googleapis.com/css?family=Niconne" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet">
   </head>
@@ -64,6 +64,15 @@
           <%= render(:partial => './layouts/almanach', locals: {scope: @avatar})%>
         </div>
       </aside>
+      <div class="popin-wrapper" v-if="popin.open" @click="togglePopin()">
+        <div class="popin-almanach">
+          <header><h3>{{popin.title}}</h3></header>
+          <main>
+            <p>{{popin.msg}}</p>
+          </main>
+        </div>
+      </div>
+
     </div>
 
   <% end %>

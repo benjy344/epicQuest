@@ -2,8 +2,8 @@
 	<h3>Items</h3>
 </header>
 <ul v-if="sortedItems.length > 0">
-	<li v-for="(item, index) in sortedItems" :class="{expend:expend == index}">
-		<h5 class="js-item-to-extend" @click="setFocus(index)" >{{item.name}} <span v-if="(isSitedObject(item.id) && item.count>2) || (!isSitedObject(item.id) && item.count>1)" class="nbItem">{{isSitedObject(item.name)?item.count-1:item.count}}</span> <span v-if="isSitedObject(item.id)" class="fit">fit</span></h5>
+	<li v-for="(item, index) in sortedItems" :class="{expend:expend == index}" v-if="item.count>0">
+		<h5 class="js-item-to-extend" @click="setFocus(index)" >{{item.name}} <span v-if="(isSitedObject(item.id) && item.count>2) || (!isSitedObject(item.id) && item.count>1)" class="nbItem">{{isSitedObject(item.id)?item.count-1:item.count}}</span> <span v-if="isSitedObject(item.id)" class="fit">fit</span></h5>
 		<div class="description js-description">
 			<p>{{item.description}}</p>
 

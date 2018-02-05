@@ -13,7 +13,9 @@
 				<span v-if="item.agility>0" >+{{item.agility}} </span>
 				<span v-if="item.health>0"  >+{{item.health}}  </span>
 			</div>
+			<button @click="removeAlmanach(item)" class="btn" >Remove</button>
 		</div>
+
 	</li>
 </ul>
 <footer>

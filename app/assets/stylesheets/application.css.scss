@@ -39,7 +39,7 @@ $bg-color-light: $light-color !default;
 // Control colors
 $success-color: #32b643 !default;
 $warning-color: #ffb700 !default;
-$error-color: #e85600 !default;
+$error-color:   #e85600 !default;
 
 // Other colors
 $code-color: #e06870 !default;
@@ -326,7 +326,7 @@ $zindex-4: 400 !default;
   appearance: none;
   background: $bg-color-light;
   border: $border-width solid $primary-color;
-  border-radius: $border-radius;
+  border-radius: 100px;
   color: $primary-color;
   cursor: pointer;
   display: inline-block;

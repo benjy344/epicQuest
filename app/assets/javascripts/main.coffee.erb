@@ -12,6 +12,10 @@ if !inventory?
 			expend: null
 			almanachExpend: null
 			almanach: []
+			popin:
+				title: ''
+				msg: ''
+				open: false
 		methods:
 			isSitedObject: (id) ->
 				return (id == this.avatar.id_sword || this.avatar.id_armor || this.avatar.id_shield)
@@ -34,10 +38,20 @@ if !inventory?
 						_this.loadData()
 			addToAlmanash: (item) ->
 				this.almanach.push item
+				for i in this.sortedItems when item.id is i.id
+					i.count--
+			removeAlmanach: (item) ->
+				for it in this.sortedItems when it.id is item.id
+					it.count++
+				for almIt, index in this.almanach when almIt.id is item.id
+					this.almanach.splice index, 1
 			addItem: (id) ->
 				$.ajax
 			      	type: "get",
 			      	url: "/addItemById?item_id=#{id}"
+			togglePopin: () ->
+				this.popin.open = !this.popin.open
+
 			craft: ->
 				string = ""
 				for item, index in this.almanach
@@ -46,19 +60,30 @@ if !inventory?
 					else
 						string += item.id+','
 
-				console.log string
+				_this = this
 				$.ajax
 			      	type: "get",
 			      	url: "/craft?items=#{string}"
-			      	success: (res) ->
-			      		console.log res
+			      	success: (res, data) ->
+			      		if res.error?
+			      			_this.popin.title = 'Oups...'
+			      			_this.popin.msg = res.error
+			      			_this.togglePopin()
+			      		else
+			      			_this.almanach = []
+			      			_this.popin.title = 'Congratulation'
+			      			_this.popin.msg = "You successfully craft #{res.success} !!"
+			      			_this.togglePopin()
+			      			_this.loadData()
+
 			loadData: (cb) ->
 				_this = this
 				$.get
 					url: "/avatars/#{$('.js-user-info').attr('data-avatar-id')}.json"
 					success: (data)->
-						_this.avatar = data.avatar
-						_this.items  = data.items
+						_this.avatar = JSON.parse(JSON.stringify(data.avatar))
+						_this.items  = JSON.parse(JSON.stringify(data.items))
+						_this.sortedItems = []
 						for item, index in _this.items
 							item.count = 0
 							for itemCount, indexCount in _this.items when itemCount.id is item.id
@@ -67,10 +92,12 @@ if !inventory?
 							for sortedItem in _this.sortedItems when item.id is sortedItem.id
 								aleradyExist = true
 							_this.sortedItems.push item if !aleradyExist
+
 						cb() if cb?
 			toggle: ->
 				if this.open
 					this.open = !this.open
+					_this.almanach = []
 				else
 					this.loadData( -> this.open = !this.open)
 

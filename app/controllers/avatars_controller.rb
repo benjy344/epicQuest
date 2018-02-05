@@ -57,33 +57,32 @@ class AvatarsController < ApplicationController
       counter = 0
       recipe.ingredients.each do |ing|
         @items.each do |item|
-
           if (ing.item_id.to_i == item.to_i)
             counter = counter+1
-            puts 'counter ++'
           end
         end
-        puts "===================>>>>"
-        puts counter
-        puts @items.count
-        puts counter == @items.count
-        puts "===================>>>>"
         if counter == @items.count
           @item = Item.find(recipe.item.id)
-          puts "==================="
-          puts @item.inspect
-          puts "==================="
-          puts "==================="
         end
       end
+    end
 
-      if counter == @items.count
-        @item = Item.find(recipe.item.id)
-        puts "==================="
-        puts @item.inspect
-        puts "==================="
-        puts "==================="
+    if @item
+      current_user.avatar.inventory.items << @item
+      @items.each do |idItemToRemove|
+        @toRemove = current_user.avatar.inventory.pockets.where(item_id: idItemToRemove.to_i).first
+        current_user.avatar.inventory.pockets.delete(@toRemove)
       end
+      respond_to do |format|  ## Add this
+        format.json { render :json => { :success => @item.name }, :status => :ok }
+        ## Other format
+      end
+    else
+      respond_to do |format|  ## Add this
+        format.json { render :json => { :error => 'You can not craft this.. try again !' }, :status => :ok }
+        ## Other format
+      end
+
     end
   end
 

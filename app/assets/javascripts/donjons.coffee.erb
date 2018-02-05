@@ -119,12 +119,13 @@ if !fightplace?
 				window.location.href = "/gameover"
 			attack: () ->
 				this.round = true
-				force = 9999 #this.avatar.force + this.sword.force
-				console.log this
+				force = this.avatar.force + this.sword.force
+				console.log force
 				avatarDefence = this.avatar.defence + this.shield.defence + this.armor.defence
 				if this.avatar.agility >= this.monster.agility
 					#si l'avatar est le plus rapide
 					#attaque le monstre
+					console.log this.monster.hp, (force - (this.monster.defence / 2)), Math.round( this.monster.hp - (force - (this.monster.defence / 2)))
 					if ( Math.round( this.monster.hp - (force - (this.monster.defence / 2))) < this.monster.hp  )
 						this.monster.hp = Math.round( this.monster.hp - (force - (this.monster.defence / 2)))
 
