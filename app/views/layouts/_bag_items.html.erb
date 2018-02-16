@@ -14,7 +14,8 @@
 				<span v-if="item.health>0"  >+{{item.health}}  </span>
 			</div>
 			<div class="actions">
-				<button class="btn" v-if="!isSitedObject(item.id)" >Drop</button>
+				<!-- <button class="btn" v-if="!isSitedObject(item.id)" >Drop</button> -->
+				<button class="btn" v-if="item.health>0" @click="heal(item)" >Heal</button>
 				<button class="btn" v-if="(item.category != 'resource' && item.category != 'health') && !isSitedObject(item.id)" @click="sitObject(item.id)" >Sit</button>
 				<button class="btn" v-if="isSitedObject(item.id)" @click="unsitObject(item.id)">Unsit</button>
 				<button class="btn" v-if="(isSitedObject(item.id) && item.count>2) || (!isSitedObject(item.id) && item.count>0)"@click="addToAlmanash(item)">Add to the Almanach</button>

@@ -1,6 +1,14 @@
 class ItemsController < ApplicationController
   before_action :set_item, only: [:show, :edit, :update, :destroy]
 
+
+
+  def getForge
+    @items = Item.all
+    respond_to do |format|
+      format.json { render :json => { items: @items } }
+    end
+  end
   # GET /items
   # GET /items.json
   def index
@@ -35,6 +43,27 @@ class ItemsController < ApplicationController
         format.json { render json: @item.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def buy
+    @avatar = current_user.avatar
+    @item   = Item.find(params[:item_id])
+    @price  = @item.price
+    @gold   = @avatar.gold - @price
+
+    @avatar.update(gold: @gold)
+    @avatar.inventory.items << @item
+  end
+
+  def sale
+    @avatar = current_user.avatar
+    @item   = Item.find(params[:item_id])
+    @price  = @item.price-(@item.price*0.4)
+    @gold   = @avatar.gold + @price
+
+    @avatar.update(gold: @gold)
+    @toRemove = @avatar.inventory.pockets.where(item_id: params[:item_id]).first
+    @avatar.inventory.pockets.delete(@toRemove)
   end
 
   # PATCH/PUT /items/1

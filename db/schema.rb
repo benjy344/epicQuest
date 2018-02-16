@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180202130902) do
+ActiveRecord::Schema.define(version: 20180213093241) do
 
   create_table "avatars", force: :cascade do |t|
     t.string "name", null: false
@@ -114,6 +114,24 @@ ActiveRecord::Schema.define(version: 20180202130902) do
     t.integer "item_id"
     t.index ["inventory_id"], name: "index_pockets_on_inventory_id"
     t.index ["item_id"], name: "index_pockets_on_item_id"
+  end
+
+  create_table "quest_logs", force: :cascade do |t|
+    t.integer "avatar_id"
+    t.integer "quest_id"
+    t.string "state", default: "locked"
+    t.index ["avatar_id"], name: "index_quest_logs_on_avatar_id"
+    t.index ["quest_id"], name: "index_quest_logs_on_quest_id"
+  end
+
+  create_table "quests", force: :cascade do |t|
+    t.string "title", null: false
+    t.string "description", null: false
+    t.integer "unlockLevel"
+    t.boolean "done", default: false
+    t.string "rewardType"
+    t.integer "objetToFind"
+    t.integer "reward"
   end
 
   create_table "recipes", force: :cascade do |t|

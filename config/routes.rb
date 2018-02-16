@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :rooms
   resources :donjons
   resources :avatars
+  resources :quests
 
 	root 'index#index'
   	devise_for :users
@@ -22,4 +23,11 @@ Rails.application.routes.draw do
   get 'sitItem'                 => 'avatars#sitItem'
   get 'unsitItem'               => 'avatars#unsitItem'
   get 'craft'                   => 'avatars#craft'
+  get 'heal'                    => 'avatars#heal'
+  get 'rest'                    => 'avatars#rest'
+  get 'getForge'                => 'items#getForge'
+  get 'buy'                     => 'items#buy'
+  get 'sale'                    => 'items#sale'
+  get 'startQuest'              => 'quests#startQuest'
+  get 'CompletQuest'            => 'quests#completQuest'
 end

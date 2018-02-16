@@ -1,8 +1,9 @@
 $rooms   = $('body').find( '.js-room' )
 $addItem = $rooms.find( '.js-add-item' )
 
-if !inventory?
-	inventory = new Vue
+
+if !Window.inventory?
+	Window.inventory = new Vue
 		el: '#v-inventory'
 		data:
 			open: false
@@ -28,14 +29,15 @@ if !inventory?
 				$.get
 					url: "/sitItem?item_id=#{id}"
 					success: (data)->
-						_this.loadData()
-
+						cb = if Window.fightplace.visible then Window.fightplace.loadData() else null
+						_this.loadData(cb)
 			unsitObject: (id) ->
 				_this = this
 				$.get
 					url: "/unsitItem?item_id=#{id}"
 					success: (data)->
-						_this.loadData()
+						cb = if Window.fightplace.visible then Window.fightplace.loadData() else null
+						_this.loadData(cb)
 			addToAlmanash: (item) ->
 				this.almanach.push item
 				for i in this.sortedItems when item.id is i.id
@@ -51,7 +53,22 @@ if !inventory?
 			      	url: "/addItemById?item_id=#{id}"
 			togglePopin: () ->
 				this.popin.open = !this.popin.open
+			heal: (item) ->
+				_this   = this
 
+				percent = (_this.avatar.MaxHealth*(item.health/100))
+				newhp   = _this.avatar.hp + percent
+				if newhp > _this.avatar.MaxHealth
+			        newhp = _this.avatar.MaxHealth
+
+				_this.avatar.hp = newhp
+
+				$.ajax
+			      	type: "get",
+			      	url: "/heal?item_id=#{item.id}"
+			      	success: ->
+			      		cb = if Window.fightplace.visible then Window.fightplace.loadData() else null
+			      		_this.loadData(cb)
 			craft: ->
 				string = ""
 				for item, index in this.almanach
@@ -93,13 +110,16 @@ if !inventory?
 								aleradyExist = true
 							_this.sortedItems.push item if !aleradyExist
 
-						cb() if cb?
+						cb() if cb? && typeof cb is "function"
+						_this.$forceUpdate()
 			toggle: ->
-				if this.open
-					this.open = !this.open
+				_this = this
+				if _this.open
+					_this.open = !_this.open
 					_this.almanach = []
 				else
-					this.loadData( -> this.open = !this.open)
+					_this.loadData ->
+						_this.open = !_this.open
 
 
 
@@ -110,7 +130,7 @@ if $addItem.length
 		e.stopPropagation()
 		$_this = $(this)
 		itemId = $_this.attr('data-item-id')
-		inventory.addItem itemId
+		Window.inventory.addItem itemId
 
 		if $_this.next().length is 0 && $_this.prev().length is 0
 			$_this.parent().append('<li>Empty...</li>')

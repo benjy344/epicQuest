@@ -2,7 +2,7 @@
 	random    = rand(1..6)
 	className = "color-#{random}"
 %>
-<div class="js-donjon donjon <%= className %>" data-donjon-id="<%= @donjon.id %>">
+<div id="donjon" class="js-donjon donjon <%= className %>" data-donjon-id="<%= @donjon.id %>">
 
 	<div class="titleScreen">
 		<h1><%= @donjon.name %></h1>
@@ -16,5 +16,19 @@
 
 	<%= render partial: 'rooms/rooms_list' , locals: {rooms: @donjon.rooms} %>
 	<%= render partial: 'fight_place', locals: {avatar: @avatar, scope: @avatar} %>
+
+
+	<ul class="bg-bubbles">
+	  <li></li>
+	  <li></li>
+	  <li></li>
+	  <li></li>
+	  <li></li>
+	  <li></li>
+	  <li></li>
+	  <li></li>
+	  <li></li>
+	  <li></li>
+	</ul>
 
 </div>

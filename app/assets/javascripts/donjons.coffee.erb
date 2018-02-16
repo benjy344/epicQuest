@@ -3,6 +3,7 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 $introScreen  = null
+donjon        = null
 $starBtn      = null
 $rooms        = null
 $interactives = null
@@ -13,8 +14,12 @@ $rooms        = $('body').find( '.js-room' )
 $enterFight   = $rooms.find( '.js-get-fight' )
 $fightplace   = $('body').find( '.js-fightplace' )
 
-if !fightplace?
-	fightplace = new Vue
+GlobalMonsters = []
+
+
+
+if !Window.fightplace? && $('#fightplace').length > 0
+	Window.fightplace = new Vue
 		el: '#fightplace'
 		data:
 			visible: false
@@ -30,19 +35,29 @@ if !fightplace?
 			monsterDead: false
 			restGold: true
 		mounted: () ->
-			_this = this
-			$.ajax
-				url: '/donjons/'+$('.js-donjon').attr('data-donjon-id')+'.json'
-				success: (res) ->
-					_this.donjon      = res
-					_this.avatar      = res.avatar
-					_this.avatarItems = res.avatarItems
-					for item in _this.avatarItems
-						switch item.id
-							when _this.avatar.id_sword  then _this.sword  = item
-							when _this.avatar.id_shield then _this.shield = item
-							when _this.avatar.id_armor  then _this.armor  = item
+			this.loadData()
 		methods:
+			loadData: ->
+				_this = this
+				$.ajax
+					url: '/donjons/'+$('.js-donjon').attr('data-donjon-id')+'.json'
+					success: (res) ->
+						_this.donjon      = JSON.parse(JSON.stringify(res))
+						_this.avatar      = JSON.parse(JSON.stringify(res.avatar))
+						_this.avatarItems = JSON.parse(JSON.stringify(res.avatarItems))
+						for item in _this.avatarItems
+							switch item.id
+								when _this.avatar.id_sword  then _this.sword  = item
+								when _this.avatar.id_shield then _this.shield = item
+								when _this.avatar.id_armor  then _this.armor  = item
+						if _this.avatar.id_sword is null
+							_this.sword  = {}
+						if _this.avatar.id_shield is null
+							_this.shield = {}
+						if _this.avatar.id_armor is null
+							_this.armor  = {}
+						_this.$forceUpdate()
+
 			setMonster: (id) ->
 				this.visible = true
 				for monster, index in this.donjon.monsters when parseInt(monster.id) is parseInt(id)
@@ -55,6 +70,35 @@ if !fightplace?
 				$.get
 				  url: url
 				  dataType: "script"
+
+			closeFightPlace: ->
+				this.visible = false
+				checkRoomMonster()
+
+			openInventory: ->
+				Window.inventory.toggle()
+
+			getAgility: ->
+				agility = avatar.agility if avatar?
+				if sword? && sword.agility?
+					agility += sword.agility
+				if shield? && shield.agility?
+					agility += shield.agility
+				if armor? && armor.agility?
+					agility += armor.agility
+
+				return agility
+
+			getForce: ->
+				force = avatar.force
+				if sword? && sword.force?
+					force += sword.force
+				if shield? && shield.force?
+					force += shield.force
+				if armor? && armor.force?
+					force += armor.force
+
+				return force
 
 			gainExp: ->
 				this.avatar.exp += this.monster.exp
@@ -71,9 +115,8 @@ if !fightplace?
 				this.avatar.level += 1
 				this.avatar.exp = this.avatar.exp - this.avatar.nextLevel
 				this.avatar.nextLevel += (this.avatar.nextLevel*1.5)
-
-				switch this.avatar.job
-					when "Thief"
+				switch this.avatar.job_id
+					when 1 # Thief
 						this.avatar.MaxHealth   += 3
 						this.avatar.hp          += 3
 						this.avatar.force       += 2
@@ -85,20 +128,21 @@ if !fightplace?
 							when 1
 								console.log 'maybe some special skills??'
 
-					when "Sentinel"
+					when 2 # Sentinel
 						this.avatar.MaxHealth   += 4
 						this.avatar.hp          += 4
 						this.avatar.force       += 5
 						this.avatar.agility     += 2
 						this.avatar.inteligence += 2
 						this.avatar.defence     += 4
-					when "Mage"
+					when 3 # Mage
 						this.avatar.MaxHealth   += 5
 						this.avatar.hp          += 5
 						this.avatar.force       += 3
 						this.avatar.agility     += 3
 						this.avatar.inteligence += 3
 						this.avatar.defence     += 3
+				if this.avatar.exp >= this.avatar.nextLevel then this.levelUp()
 
 
 			percentHp: (value, valMax) ->
@@ -108,6 +152,8 @@ if !fightplace?
 			win: ->
 				this.gainExp()
 				this.renderAvatar()
+				for monster in GlobalMonsters when monster.id is this.monster.id
+					monster.isDead = true
 				_this = this
 				setTimeout ->
 					_this.round = false
@@ -119,13 +165,14 @@ if !fightplace?
 				window.location.href = "/gameover"
 			attack: () ->
 				this.round = true
-				force = this.avatar.force + this.sword.force
-				console.log force
-				avatarDefence = this.avatar.defence + this.shield.defence + this.armor.defence
+				force         = if this.sword.force? then this.avatar.force + this.sword.force else this.avatar.force
+				avatarDefence = this.avatar.defence
+				if this.shield.defence? then avatarDefence += this.shield.defence
+				if this.armor.defence? then avatarDefence += this.armor.defence
+
 				if this.avatar.agility >= this.monster.agility
 					#si l'avatar est le plus rapide
 					#attaque le monstre
-					console.log this.monster.hp, (force - (this.monster.defence / 2)), Math.round( this.monster.hp - (force - (this.monster.defence / 2)))
 					if ( Math.round( this.monster.hp - (force - (this.monster.defence / 2))) < this.monster.hp  )
 						this.monster.hp = Math.round( this.monster.hp - (force - (this.monster.defence / 2)))
 
@@ -159,22 +206,29 @@ if !fightplace?
 
 
 
-
-
 if $enterFight.length && $fightplace.length
 	$enterFight.off('click')
 	$enterFight.on 'click', ()->
 		$fightplace.addClass('visible')
-		monster = JSON.parse($(this).attr('data-monster'))
-		fightplace.setMonster(monster.id)
+		$this   = $(this)
+		monster = JSON.parse($this.attr('data-monster'))
+		Window.fightplace.setMonster(monster.id)
+		setTimeout ->
+			$this.parents('.js-interactive-monster').remove()
+		, 1000
 
 
-$('.js-attack-button').off 'click'
-$('.js-attack-button').on 'click', (e)->
-	console.log 'fight'
+$introScreen  = $('body').find( '.titleScreen' )
+$starBtn      = $introScreen.find( '.js-start' )
+$rooms        = $('body').find( '.js-room' )
+$nextRoomBtn  = $rooms.find( '.js-next-room' )
+$prevRoomBtn  = $rooms.find( '.js-prev-room' )
 
-skipIntro = () ->
+
+
+skipIntro = (e) ->
 	$introScreen.css {'display': 'none'}
+	checkRoomMonster()
 
 toggleTooltip = (e) ->
 	if !$(this).hasClass 'tooltip-active'
@@ -190,4 +244,26 @@ ChangeRoom = (e) ->
 	if $target.length > 0
 		$rooms.removeClass 'active'
 		$target.addClass 'active'
+		checkRoomMonster()
+
+checkRoomMonster = ()->
+	GlobalMonsters = []
+	$('.active.js-room').find('.js-interactive-monster').each (el,index)->
+		GlobalMonsters.push index
+	if GlobalMonsters.length is 0
+		$('.active.js-room').find('.finish, .js-next-room').removeClass('hidden-stairs').addClass('visible-stairs')
+		$('.active.js-room').find('.stairs-closed').removeClass('visible-stairs').addClass('hidden-stairs')
+
+if $starBtn.length
+	$starBtn.off('click')
+	$starBtn.on('click', skipIntro )
+
+if $nextRoomBtn.length
+	$nextRoomBtn.off('click')
+	$nextRoomBtn.on('click', ChangeRoom )
+
+
+if $prevRoomBtn.length
+	$prevRoomBtn.off('click')
+	$prevRoomBtn.on('click', ChangeRoom )
 

@@ -1,3 +1,176 @@
-<div class="town">
-	<h1>Town</h1>
+<div id='town' class="town" data-avatar-id='<%= current_user.avatar.id %>'>
+	<div class="inn interactive" :class="{'tooltip-active':activeTooltip == 0}" @click="setTooltip(0)">
+		<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+			 viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
+		<g id="XMLID_8_">
+			<polygon id="XMLID_1_" class="townc0" points="93.2,75.2 49.1,100.1 49.1,51.4 93.2,26.5 	"/>
+			<polygon id="XMLID_3_" class="townc1" points="49.1,100.1 7.6,76 7.6,27.4 49.1,51.4 	"/>
+			<polygon id="XMLID_2_" class="townc2" points="49.1,2.7 93.2,26.5 49.1,51.4 7.6,27.4 	"/>
+			<g id="XMLID_5_">
+				<polygon id="XMLID_4_" class="toxnc3" points="33.4,58.2 20.4,50.8 20.4,41.8 33.4,49.2 		"/>
+			</g>
+			<g id="XMLID_7_">
+				<polygon id="XMLID_9_" class="toxnc3" points="30,89.1 20.4,83.7 20.4,63.8 30,69.2 		"/>
+			</g>
+		</g>
+		</svg>
+		<div class="tooltip">
+			<header><h3>Inn</h3></header>
+			<section>
+				<ul>
+					<li @click="rest()" :disabled="avatar.gold > 2">Rest (3 gold)</li>
+				</ul>
+			</section>
+		</div>
+	</div>
+	<div class="inn interactive" :class="{'tooltip-active':activeTooltip == 1}" @click="setTooltip(1)">
+		<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+			 viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
+		<g id="XMLID_8_">
+			<polygon id="XMLID_1_" class="townc0" points="93.2,75.2 49.1,100.1 49.1,51.4 93.2,26.5 	"/>
+			<polygon id="XMLID_3_" class="townc1" points="49.1,100.1 7.6,76 7.6,27.4 49.1,51.4 	"/>
+			<polygon id="XMLID_2_" class="townc2" points="49.1,2.7 93.2,26.5 49.1,51.4 7.6,27.4 	"/>
+			<g id="XMLID_5_">
+				<polygon id="XMLID_4_" class="toxnc3" points="33.4,58.2 20.4,50.8 20.4,41.8 33.4,49.2 		"/>
+			</g>
+			<g id="XMLID_7_">
+				<polygon id="XMLID_9_" class="toxnc3" points="30,89.1 20.4,83.7 20.4,63.8 30,69.2 		"/>
+			</g>
+		</g>
+		</svg>
+		<div class="tooltip">
+			<header><h3>forge</h3></header>
+			<section>
+				<ul>
+					<li @click="enterForge()">Enter</li>
+				</ul>
+			</section>
+		</div>
+	</div>
+	<div class="inn interactive" :class="{'tooltip-active':activeTooltip == 2}" @click="setTooltip(2)">
+		<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+			 viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
+		<g id="XMLID_8_">
+			<polygon id="XMLID_1_" class="townc0" points="93.2,75.2 49.1,100.1 49.1,51.4 93.2,26.5 	"/>
+			<polygon id="XMLID_3_" class="townc1" points="49.1,100.1 7.6,76 7.6,27.4 49.1,51.4 	"/>
+			<polygon id="XMLID_2_" class="townc2" points="49.1,2.7 93.2,26.5 49.1,51.4 7.6,27.4 	"/>
+			<g id="XMLID_5_">
+				<polygon id="XMLID_4_" class="toxnc3" points="33.4,58.2 20.4,50.8 20.4,41.8 33.4,49.2 		"/>
+			</g>
+			<g id="XMLID_7_">
+				<polygon id="XMLID_9_" class="toxnc3" points="30,89.1 20.4,83.7 20.4,63.8 30,69.2 		"/>
+			</g>
+		</g>
+		</svg>
+		<div class="tooltip">
+			<header><h3>Guild</h3></header>
+			<section>
+				<ul>
+					<li @click="enterGuild()">Enter</li>
+				</ul>
+			</section>
+		</div>
+	</div>
+	<div class="forgeInner" :class="{open:forgeOpen}" >
+		<button class="close" @click="enterForge()"></button>
+		<div class="bag">
+			<header>
+				<h3>Items</h3>
+			</header>
+			<ul v-if="sortedItems.length > 0">
+				<li v-for="(item, index) in sortedItems" :class="{expend:expend == index}" v-if="item.count>0">
+					<h5 class="js-item-to-extend" @click="setFocus(index)" >{{item.name}} <span v-if="(isSitedObject(item.id) && item.count>2) || (!isSitedObject(item.id) && item.count>1)" class="nbItem">{{isSitedObject(item.id)?item.count-1:item.count}}</span> <span v-if="isSitedObject(item.id)" class="fit">fit</span></h5>
+					<div class="description js-description">
+						<p>{{item.description}}</p>
+
+						<div class="caracteristics">
+							<span v-if="item.force>0"   >+{{item.force}}   </span>
+							<span v-if="item.defence>0" >+{{item.defence}} </span>
+							<span v-if="item.agility>0" >+{{item.agility}} </span>
+							<span v-if="item.health>0"  >+{{item.health}}  </span>
+						</div>
+						<div class="actions">
+							<button class="btn" @click="sale(item)" >sale ({{(item.price-(item.price*0.4))}} gold)</button>
+						</div>
+					</div>
+				</li>
+			</ul>
+			<span class="gold">{{avatar.gold}} Gold</span>
+
+			<p v-if="sortedItems.length == 0">Empty... </p>
+		</div>
+
+		<div class="forge">
+			<header>
+				<h3>Forge</h3>
+			</header>
+			<ul>
+				<li v-for="(item, index) in forge" :class="{expend:expendForge == index}" >
+					<h5 class="js-item-to-extend" @click="setForgeFocus(index)" >{{item.name}}</h5>
+					<div class="description js-description">
+						<p>{{item.description}}</p>
+
+						<div class="caracteristics">
+							<span v-if="item.force>0"   >+{{item.force}}   </span>
+							<span v-if="item.defence>0" >+{{item.defence}} </span>
+							<span v-if="item.agility>0" >+{{item.agility}} </span>
+							<span v-if="item.health>0"  >+{{item.health}}  </span>
+						</div>
+						<div class="actions">
+							<button class="btn" :disabled='item.price>avatar.gold' @click="buy(item)" >Buy ({{item.price}} gold)</button>
+						</div>
+					</div>
+				</li>
+			</ul>
+
+			<p v-if="sortedItems.length == 0">Empty... </p>
+		</div>
+	</div>
+
+
+	<div class="guildInner" :class="{open:guildOpen}" >
+		<button class="close" @click="enterGuild()"></button>
+		<div class="quests">
+
+			<header>
+				<h3>Quests</h3>
+			</header>
+			<ul>
+				<li v-for="(quest, index) in quests" :class="{expend:expendGuild == index}" >
+					<h5 class="js-item-to-extend" @click="setGuildFocus(index)" >{{quest.title}}</h5>
+					<div class="description js-description">
+						<p>{{quest.description}}</p>
+						<span class="completed" v-if="isFinishedQuest(quest)">Completed</span>
+
+						<div class="actions">
+							<button v-if="!isActiveQuest(quest.id)" class="btn" @click="startQuest(quest.id)" >Start this quest</button>
+							<button v-if="isActiveQuest(quest.id) && !isFinishedQuest(quest)" :disabled="isCompletedQuest(quest) " class="btn" @click="CompletQuest(quest.id)" >Complet the quest</button>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+
+	<div class="loading" v-if="loading === true">
+		<div class="loader-wrapper" v-if="loading">
+			<div class="loader">
+		    <div class="roller"></div>
+		    <div class="roller"></div>
+		  </div>
+
+		  <div id="loader2" class="loader">
+		    <div class="roller"></div>
+		    <div class="roller"></div>
+		  </div>
+
+		  <div id="loader3" class="loader">
+		    <div class="roller"></div>
+		    <div class="roller"></div>
+		  </div>
+		</div>
+	</div>
+
+
 </div>

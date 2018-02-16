@@ -42,26 +42,31 @@ class AvatarsController < ApplicationController
   end
 
   def craft
-    @items          = params[:items].split(',')
-    @recipes        = Recipe.all
-    @goodIngredient = []
+    @items                = params[:items].split(',')
+    @itemsClone           = params[:items].split(',').clone
+    @itemsCount           = @items.count
+    @recipes              = Recipe.all
+    @potentialGoodRecipes = []
 
     @recipes.each do |recipe|
       temp = recipe.ingredients.where(item_id: @items.first)
       if recipe.ingredients.count == @items.count && temp.count>0
-        @goodIngredient << recipe
+        @potentialGoodRecipes << recipe
       end
     end
 
-    @goodIngredient.each do |recipe|
+    @potentialGoodRecipes.each do |recipe|
       counter = 0
+      @items = @itemsClone.clone
       recipe.ingredients.each do |ing|
-        @items.each do |item|
+        @items.delete_if do |item|
           if (ing.item_id.to_i == item.to_i)
             counter = counter+1
+            true
+            break
           end
         end
-        if counter == @items.count
+        if counter == @itemsCount
           @item = Item.find(recipe.item.id)
         end
       end
@@ -69,7 +74,7 @@ class AvatarsController < ApplicationController
 
     if @item
       current_user.avatar.inventory.items << @item
-      @items.each do |idItemToRemove|
+      @itemsClone.each do |idItemToRemove|
         @toRemove = current_user.avatar.inventory.pockets.where(item_id: idItemToRemove.to_i).first
         current_user.avatar.inventory.pockets.delete(@toRemove)
       end
@@ -84,6 +89,29 @@ class AvatarsController < ApplicationController
       end
 
     end
+  end
+
+  def rest
+    @avatar = current_user.avatar
+    @gold = @avatar.gold - 3
+
+    @avatar.update(hp: @avatar.MaxHealth, gold: @gold)
+
+  end
+
+  def heal
+    @avatar  = current_user.avatar
+    @item    = @avatar.inventory.items.where(id: params[:item_id]).first
+    @percent = (@avatar.MaxHealth*(@item.health/100.00))
+    @newhp   = @avatar.hp + @percent
+    if @newhp > @avatar.MaxHealth
+      @newhp = @avatar.MaxHealth
+    end
+    @avatar.update(hp: @newhp)
+
+    #delete object of the inventory
+    @toRemove = @avatar.inventory.pockets.where(item_id: params[:item_id]).first
+    @avatar.inventory.pockets.delete(@toRemove)
   end
 
   def sitItem

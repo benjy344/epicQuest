@@ -4,6 +4,9 @@ class Avatar < ApplicationRecord
 
 	before_create :build_default_inventory
 
+	has_many :quest_logs
+	has_many :quests, through: :quest_logs
+
 	private
 	def build_default_inventory
 	  # build default profile instance. Will use default params.

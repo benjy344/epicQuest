@@ -38,8 +38,8 @@ $('body').find('.inventoryButton, .js-close-bag').on('click', function(e) {
 init = function() {
 
 	console.log('init')
-	$introScreen  = $('body').find( '.titleScreen' )
-	$starBtn      = $introScreen.find( '.js-start' )
+	// $introScreen  = $('body').find( '.titleScreen' )
+	// $starBtn      = $introScreen.find( '.js-start' )
 	$rooms        = $('body').find( '.js-room' )
 	$interactives = $rooms.find( '.interactive' )
 	$nextRoomBtn  = $rooms.find( '.js-next-room' )
@@ -49,24 +49,19 @@ init = function() {
 	$enterFight   = $rooms.find( '.js-get-fight' )
 	$fightplace   = $('body').find( '.js-fightplace' )
 
-
-	if($starBtn.length) {
-		$starBtn.off('click')
-		$starBtn.on('click', skipIntro)
-	}
 	if($interactives.length) {
 		$interactives.off('click')
 		$interactives.on('click', toggleTooltip)
 	}
-	if($nextRoomBtn.length) {
-		$nextRoomBtn.off('click')
-		$nextRoomBtn.on('click', ChangeRoom)
-	}
+	// if($nextRoomBtn.length) {
+	// 	$nextRoomBtn.off('click')
+	// 	$nextRoomBtn.on('click', ChangeRoom)
+	// }
 
-	if($prevRoomBtn.length) {
-		$prevRoomBtn.off('click')
-		$prevRoomBtn.on('click', ChangeRoom)
-	}
+	// if($prevRoomBtn.length) {
+	// 	$prevRoomBtn.off('click')
+	// 	$prevRoomBtn.on('click', ChangeRoom)
+	// }
 
 	if($monster.length) {
 		$monster.off('click')
@@ -100,13 +95,14 @@ init = function() {
 
 var ChangeRoom, skipIntro, toggleTooltip
 
-skipIntro = function() {
-  return $introScreen.css({
-    'display': 'none'
-  })
-}
+// skipIntro = function() {
+//   return $introScreen.css({
+//     'display': 'none'
+//   })
+// }
 
 toggleTooltip = function(e) {
+	console.log('kjnkjn')
   if (!$(this).hasClass('tooltip-active')) {
     $interactives.removeClass('tooltip-active')
     return $(this).toggleClass('tooltip-active')

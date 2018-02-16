@@ -11,5 +11,15 @@ json.items avatar.inventory.items do |item|
 	json.defence item.defence
 	json.category item.category
 end
+json.quests avatar.quests do |quest|
+	json.id quest.id
+	json.title quest.title
+	json.description quest.description
+	json.unlockLevel quest.unlockLevel
+	json.done quest.done
+	json.rewardType quest.rewardType
+	json.objetToFind quest.objetToFind
+	json.reward quest.reward
+end
 
 json.url avatar_url(avatar, format: :json)

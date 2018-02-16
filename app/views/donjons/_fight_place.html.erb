@@ -24,6 +24,7 @@ end
  %>
 
 <div class="fightplace js-fightplace" id="fightplace" v-bind:class="{ visible: visible }">
+	<button class="close" v-if="monsterDead" @click="closeFightPlace()"></button>
 
 	<div class="monster js-monster" id="fightMonster" style="text-align:center">
 		<div v-if="!monsterDead">
@@ -34,15 +35,67 @@ end
 
 			<div class="js-fight-buttons" style="width: 400px; margin:30px auto;">
 				<button class="btn" @click="attack()" :disabled="round">Attack</button>
-				<div class="btn js-trigger-menu">Look at the inventory</div>
+				<div class="btn js-trigger-menu" @click="openInventory()">Look at the inventory</div>
 			</div>
 		</div>
 		<div v-if="monsterDead">
 			<p>You defeated the {{monster.name}}</p>
 
-			<button class="button" v-if='monster.gold && restGold' @click="getGold()" >Get {{monster.gold}} Gold</button>
+			<button class="btn" v-if='monster.gold && restGold' @click="getGold()" >Get {{monster.gold}} Gold</button>
 		</div>
+	</div>
 
+	<div class="monster-vue" v-if="!monsterDead">
+		<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+			 viewBox="-26 0 46.6 100" style="enable-background:new -26 0 46.6 100;" xml:space="preserve">
+
+		<g id="XMLID_3_">
+				<radialGradient id="XMLID_10_" cx="3.6" cy="4.6242" r="12.0574" gradientTransform="matrix(-1 0 0 -1 -5.4394 100)" gradientUnits="userSpaceOnUse">
+				<stop  offset="0" style="stop-color:#4D4D4D;stop-opacity:0.4"/>
+				<stop  offset="1" style="stop-color:#333333;stop-opacity:0"/>
+			</radialGradient>
+			<ellipse id="XMLID_1_" class="enemi0" cx="-9" cy="95.4" rx="16.4" ry="4.6"/>
+			<g id="XMLID_2_">
+				<path id="XMLID_5_" class="enemi1" d="M-0.1,80.6c-2,0.5-4,0.8-6,1v10.9c0,0-3.9,1.9-2.4,3.6c1.5,1.6,3.7,0.6,3.7,0.6l4.7-1.9
+					C-0.1,94.8-0.1,80.6-0.1,80.6z"/>
+				<g id="XMLID_6_">
+					<path id="XMLID_8_" class="enemi1" d="M-17.1,80.7v10.5c0,0-4.3,1.9-2.8,3.6c1.5,1.6,3.2,0.6,3.2,0.6l4.6-1.9V81.6
+						C-14.1,81.4-16.1,81.1-17.1,80.7z"/>
+					<path id="XMLID_12_" d="M-17.1,84.6c1,0.4,3,0.7,5,0.9V77h-5V84.6z"/>
+				</g>
+				<path id="XMLID_11_" d="M-6.1,79v6.5c2-0.2,4-0.6,6-1V79H-6.1z"/>
+			</g>
+			<path id="XMLID_4_" class="enemi1" d="M-26,70.2c1.5,12.2,12.6,12.5,14.1,12.5c1.5-0.1,25.2,0.7,21.9-16.5c-8.3-7-13-23.8-14.5-29.8
+				c9.6,1,21.7,8.8,24.7,4.8C23.9,8.3,3.3,0.5-6.6,0.5s-17.9,8-17.9,17.9c0,8.2,5.4,15.1,12.9,17.2C-14.9,39.6-24.5,52.2-26,70.2z"/>
+			<circle id="XMLID_7_" class="enemi2" cx="-14.3" cy="18.6" r="2"/>
+		</g>
+		</svg>
+	</div>
+
+	<div class="avatar-vue">
+		<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+			 viewBox="0 0 46.6 100" style="enable-background:new 0 0 46.6 100;" xml:space="preserve">
+		<g id="XMLID_3_">
+			<radialGradient id="XMLID_51_" cx="29.5731" cy="95.3758" r="12.0758" gradientUnits="userSpaceOnUse">
+				<stop  offset="0" style="stop-color:#4D4D4D;stop-opacity:0.4"/>
+				<stop  offset="1" style="stop-color:#333333;stop-opacity:0"/>
+			</radialGradient>
+			<ellipse id="XMLID_1_" class="avatar0" cx="29.6" cy="95.4" rx="16.4" ry="4.6"/>
+			<g id="XMLID_2_">
+				<path id="XMLID_5_" class="avatar1" d="M20.7,94.8l4.7,1.9c0,0,2.2,1,3.7-0.6c1.5-1.7-2.4-3.6-2.4-3.6V81.6c-2-0.2-4-0.5-6-1V94.8z"/>
+				<g id="XMLID_6_">
+					<path id="XMLID_8_" class="avatar1" d="M32.7,81.6v11.9l4.6,1.9c0,0,1.7,1,3.2-0.6c1.5-1.7-2.8-3.6-2.8-3.6V80.7
+						C36.7,81.1,34.7,81.4,32.7,81.6z"/>
+					<path id="XMLID_12_" class="avatar2" d="M37.7,77h-5v8.5c2-0.2,4-0.5,5-0.9V77z"/>
+				</g>
+				<path id="XMLID_11_" class="avatar2" d="M20.7,79v5.5c2,0.4,4,0.8,6,1V79H20.7z"/>
+			</g>
+			<path id="XMLID_4_" class="avatar1" d="M32.2,35.6c7.5-2.1,12.9-9,12.9-17.2c0-9.9-8-17.9-17.9-17.9S-3.3,8.3,0.4,41.2
+				c3,4,15.1-3.8,24.7-4.8c-1.5,6-6.2,22.8-14.5,29.8C7.3,83.4,31,82.6,32.5,82.7c1.5,0,12.6-0.3,14.1-12.5
+				C45.1,52.2,35.5,39.6,32.2,35.6z"/>
+			<circle id="XMLID_7_" class="avatar2" cx="34.9" cy="18.6" r="2"/>
+		</g>
+		</svg>
 	</div>
 
 	<aside class="avatar-stats js-avatar-stats">
@@ -60,10 +113,9 @@ end
 	        </div>
 
 	        <div class="carac">
-	            <span class="js-agility">Agility : <%= @avatar.agility %><% if @avatar.id_sword != 0 && !@avatar.id_sword.nil? && @avatar.inventory.items.where(id: @avatar.id_sword).count > 0 %> + <%= @avatar.inventory.items.find(@avatar.id_sword).agility %> <%end%><% if @avatar.id_armor != 0 && !@avatar.id_armor.nil? && @avatar.inventory.items.where(id: @avatar.id_armor).count > 0 %> + <%= @avatar.inventory.items.find(@avatar.id_armor).agility %> <%end%>
-	            </span>
-	            <span class="js-force">Strong : <%= @avatar.force %><% if @avatar.id_sword != 0 && !@avatar.id_sword.nil? && @avatar.inventory.items.where(id: @avatar.id_sword).count > 0 %> + <%= @avatar.inventory.items.find(@avatar.id_sword).force %> <%end%></span>
-	            <span class="js-defence">Defence : <%= @avatar.defence %><% if @avatar.id_shield != 0 && !@avatar.id_shield.nil? && @avatar.inventory.items.where(id: @avatar.id_shield).count > 0 %> + <%= @avatar.inventory.items.find(@avatar.id_shield).defence %> <%end%><% if @avatar.id_armor != 0 && !@avatar.id_armor.nil? && @avatar.inventory.items.where(id: @avatar.id_armor).count > 0 %> + <%= @avatar.inventory.items.find(@avatar.id_armor).defence %> <%end%>
+	            <span class="js-agility">Agility : {{ avatar.agility }}{{sword && sword.agility?" + "+sword.agility:""}}{{shield && shield.agility?" + "+shield.agility:""}}{{armor && armor.agility?" + "+armor.agility:""}}</span>
+	            <span class="js-force">Strong : {{ avatar.force }}{{sword && sword.force?" + "+sword.force:""}}{{shield && shield.force?" + "+shield.force:""}}{{armor && armor.force?" + "+armor.force:""}}</span>
+	            <span class="js-defence">Defence : {{ avatar.defence }}{{sword && sword.defence?" + "+sword.defence:""}}{{shield && shield.defence?" + "+shield.defence:""}}{{armor && armor.defence?" + "+armor.defence:""}}</span>
 
 	            </span>
 	        </div>
@@ -71,4 +123,3 @@ end
 	</aside>
 </div>
 
-</div>
