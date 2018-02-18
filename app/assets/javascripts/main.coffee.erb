@@ -1,6 +1,53 @@
 $rooms   = $('body').find( '.js-room' )
 $addItem = $rooms.find( '.js-add-item' )
 
+if !Window.mainNav? && $('#main-nav .js-user-info')? && parseInt($('#main-nav .js-user-info').attr('data-avatar-id') ) > 0
+	Window.mainNav = new Vue
+		el: '#main-nav'
+		data:
+			open:   false
+			avatar: {}
+			items:  []
+			sword:  {}
+			armor:  {}
+			shield: {}
+		methods:
+			loadData: (cb) ->
+				_this = this
+				$.get
+					url: "/avatars/#{$('.js-user-info').attr('data-avatar-id')}.json"
+					success: (data)->
+						_this.avatar      = JSON.parse(JSON.stringify(data.avatar))
+						_this.items       = JSON.parse(JSON.stringify(data.items))
+						for item in _this.items
+							switch item.id
+								when _this.avatar.id_sword  then _this.sword  = item
+								when _this.avatar.id_shield then _this.shield = item
+								when _this.avatar.id_armor  then _this.armor  = item
+						if _this.avatar.id_sword is null
+							_this.sword  = {}
+						if _this.avatar.id_shield is null
+							_this.shield = {}
+						if _this.avatar.id_armor is null
+							_this.armor  = {}
+
+						cb() if cb? && typeof cb is "function"
+						_this.$forceUpdate()
+			toggle: ()->
+				if this.open
+					this.open = !this.open
+				else
+					_this = this
+					this.loadData ->
+						_this.open = !_this.open
+			percentHp: (value, valMax) ->
+				result =  if value > 0 then (value*100)/valMax else 0
+				return result
+
+
+
+
+
 
 if !Window.inventory?
 	Window.inventory = new Vue

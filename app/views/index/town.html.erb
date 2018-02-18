@@ -138,9 +138,10 @@
 			<ul>
 				<li v-for="(quest, index) in quests" :class="{expend:expendGuild == index}" >
 					<h5 class="js-item-to-extend" @click="setGuildFocus(index)" >{{quest.title}}</h5>
+					<span class="completed" v-if="isFinishedQuest(quest)">Completed</span>
 					<div class="description js-description">
 						<p>{{quest.description}}</p>
-						<span class="completed" v-if="isFinishedQuest(quest)">Completed</span>
+
 
 						<div class="actions">
 							<button v-if="!isActiveQuest(quest.id)" class="btn" @click="startQuest(quest.id)" >Start this quest</button>
@@ -152,6 +153,7 @@
 		</div>
 
 	</div>
+	<p class="worldmapBtn"> <%= link_to 'World map', worldMap_path, class: 'btn' %></p>
 
 	<div class="loading" v-if="loading === true">
 		<div class="loader-wrapper" v-if="loading">

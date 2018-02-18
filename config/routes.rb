@@ -29,5 +29,6 @@ Rails.application.routes.draw do
   get 'buy'                     => 'items#buy'
   get 'sale'                    => 'items#sale'
   get 'startQuest'              => 'quests#startQuest'
-  get 'CompletQuest'            => 'quests#completQuest'
+  get 'completQuest'            => 'quests#completQuest'
+  get 'worldMap'                => 'index#worldMap'
 end

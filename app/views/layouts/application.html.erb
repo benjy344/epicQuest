@@ -16,11 +16,11 @@
     </div>
 
 	<% if user_signed_in?%>
-		<button class="toggle-nav js-toggle-nav">
+		<button id="toggle-nav" class="toggle-nav js-toggle-nav">
 			<span></span>
 		</button>
-	    <nav class="main-nav js-main-nav">
-	    	<div class="overlay"></div>
+	    <nav id="main-nav" class="main-nav js-main-nav" :class="{open:open}">
+	    	<div class="overlay" @click="toggle()"></div>
 
 	    	    <div class="user-info js-user-info" data-avatar-id="<%= !current_user.avatar.nil?? current_user.avatar.id : 0 %>">
 	    	      <p><%= current_user.username%></p>
@@ -32,10 +32,33 @@
                 </p>
 
 
-                <div class="avatarStats">
-                  <span>HP</span>
-                  <span class="line" data-hp="<%= @avatar.hp %>" data-maxHp="<%= @avatar.MaxHealth %>"></span>
-                </div>
+                <span class="level">Lvl : {{avatar.level}}</span>
+                  <span class="job"> <%=@avatar.job.name %></span>
+                  <div class="currsors">
+                        <div class="js-avatar-hp avatar-hp persent-content" data-hpMax="<%= @avatar.MaxHealth %>">
+                            <div class="js-avatar-current-hp avatar-current-hp persent" :style="{width: percentHp(avatar.hp, avatar.MaxHealth)+'%' }"></div>
+                            <span class="js-hpcount hpcount title-persent">HP : {{avatar.hp}}/{{avatar.MaxHealth}}</span>
+                        </div>
+                        <div class="js-avatar-exp avatar-exp persent-content">
+                            <div class="js-avatar-current-exp avatar-current-exp persent" :style="{width: percentHp(avatar.exp, avatar.nextLevel)+'%' }"></div>
+                            <span class="js-expcount expcount title-persent">Exp : {{avatar.exp}}/{{avatar.nextLevel}}</span>
+                        </div>
+
+                        <div class="carac">
+                            <span class="js-agility">Agility : {{ avatar.agility }}{{sword && sword.agility?" + "+sword.agility:""}}{{shield && shield.agility?" + "+shield.agility:""}}{{armor && armor.agility?" + "+armor.agility:""}}</span>
+                            <span class="js-force">Strong : {{ avatar.force }}{{sword && sword.force?" + "+sword.force:""}}{{shield && shield.force?" + "+shield.force:""}}{{armor && armor.force?" + "+armor.force:""}}</span>
+                            <span class="js-defence">Defence : {{ avatar.defence }}{{sword && sword.defence?" + "+sword.defence:""}}{{shield && shield.defence?" + "+shield.defence:""}}{{armor && armor.defence?" + "+armor.defence:""}}</span>
+
+                            </span>
+                        </div>
+                        <h3 v-if="(sword && sword.name) || (shield && shield.name) || (armor && armor.name)" >Equipment</h3>
+                        <ul class="equipe" v-if="(sword && sword.name) || (shield && shield.name) || (armor && armor.name)">
+                          <li v-if="sword && sword.name" >{{sword.name}} </li>
+                          <li v-if="shield && shield.name" >{{shield.name}}</li>
+                          <li v-if="armor && armor.name" >{{armor.name}}</li>
+                        </ul>
+                        <h3>{{avatar.gold}} Gold</h3>
+                    </div>
               <% end %>
 	    	    </div>
 

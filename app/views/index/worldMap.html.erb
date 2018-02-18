@@ -1,0 +1,13 @@
+<div class="container">
+  <h1>World Map</h1>
+
+  <div>
+    <p><%= link_to "Town", town_path, class: 'btn' %></p>
+    <% @donjons.each do |donjon| %>
+      <% if donjon.level <= @avatar.countUnlockDonjon || current_user.role === "admin"%>
+        <p><%= link_to donjon.name, donjon, class: 'btn' %></p>
+      <% end %>
+    <% end %>
+  </div>
+
+</div>

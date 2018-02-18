@@ -23,9 +23,8 @@
 Vue.development_mode = true
 
 
-$('.js-toggle-nav, .overlay').click(function(){
-    $('.js-main-nav').toggleClass('open')
-    return false
+$('.js-toggle-nav').click(function(){
+    Window.mainNav.toggle()
 })
 
 $('body').find('.js-item-to-extend').on('click', function(e) {
@@ -36,8 +35,6 @@ $('body').find('.inventoryButton, .js-close-bag').on('click', function(e) {
 	$('body').find('#inventory').toggleClass('open')
 })
 init = function() {
-
-	console.log('init')
 	// $introScreen  = $('body').find( '.titleScreen' )
 	// $starBtn      = $introScreen.find( '.js-start' )
 	$rooms        = $('body').find( '.js-room' )
@@ -102,7 +99,6 @@ var ChangeRoom, skipIntro, toggleTooltip
 // }
 
 toggleTooltip = function(e) {
-	console.log('kjnkjn')
   if (!$(this).hasClass('tooltip-active')) {
     $interactives.removeClass('tooltip-active')
     return $(this).toggleClass('tooltip-active')
@@ -119,10 +115,6 @@ ChangeRoom = function(e) {
     $rooms.removeClass('active')
     return $target.addClass('active')
   }
-}
-
-initFight = function(monster) {
-	console.log(monster)
 }
 
 init()

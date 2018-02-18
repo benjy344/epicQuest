@@ -50,7 +50,7 @@ if !Window.town? && $('#town').length > 0
 						_this.avatar       = JSON.parse(JSON.stringify(data.avatar))
 						_this.items        = JSON.parse(JSON.stringify(data.items))
 						_this.avatarQuests = JSON.parse(JSON.stringify(data.quests))
-						_this.sortedItems = []
+						_this.sortedItems  = []
 						for item, index in _this.items
 							item.count = 0
 							for itemCount, indexCount in _this.items when itemCount.id is item.id
@@ -62,7 +62,6 @@ if !Window.town? && $('#town').length > 0
 
 						cb() if cb? && typeof cb is "function"
 						_this.$forceUpdate()
-						console.log _this
 			setFocus: (index) ->
 				this.expend = if this.expend == index then null else index
 			setForgeFocus: (index) ->
@@ -100,7 +99,6 @@ if !Window.town? && $('#town').length > 0
 				return false
 			isFinishedQuest: (quest) ->
 				for avQuest in this.avatarQuests when quest.id is avQuest.id
-					console.log '---', avQuest.done
 					return avQuest.done
 
 			isCompletedQuest: (quest)->
@@ -110,7 +108,7 @@ if !Window.town? && $('#town').length > 0
 			CompletQuest: (id)->
 				_this = this
 				$.get
-					url: "/CompletQuest?quest_id=#{id}"
+					url: "/completQuest?quest_id=#{id}"
 					success: (data)->
 						_this.loadData()
 			startQuest: (id) ->
