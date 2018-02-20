@@ -21,5 +21,9 @@ json.quests avatar.quests do |quest|
 	json.objetToFind quest.objetToFind
 	json.reward quest.reward
 end
+json.quest_logs avatar.quest_logs do |log|
+	json.questId log.quest_id
+	json.state log.state
+end
 
 json.url avatar_url(avatar, format: :json)

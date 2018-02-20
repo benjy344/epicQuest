@@ -16,6 +16,8 @@ class QuestsController < ApplicationController
 				"reward"      => quest.reward,
 				"rewardItem"  => quest.reward
 			}
+			puts "----------------"
+			puts tempQuest.inspect
 			if quest.rewardType != 'gold'
 				tempQuest['rewardItem'] = Item.find(quest.reward)
 			end
@@ -25,29 +27,31 @@ class QuestsController < ApplicationController
 
 	def startQuest
 		@avatar = current_user.avatar
-	    @quest   = Quest.find(params[:quest_id])
+	  @quest  = Quest.find(params[:quest_id])
 
-	    @avatar.quests << @quest
+	  @avatar.quests << @quest
+	  @avQuest = @avatar.quest_logs.where(quest_id: params[:quest_id])
+  	@avQuest.update(state: 'In progress')
 	end
 
 	def completQuest
 		@avatar = current_user.avatar
-	  	@quests = Quest.all
-	  	@quest  = Quest.find(params[:quest_id])
+  	@quests = Quest.all
+  	@quest  = Quest.find(params[:quest_id])
 
-	  	@itemTodelete = @avatar.inventory.pockets.where(item_id: @quest.objetToFind).first
-	    @avatar.inventory.pockets.delete(@itemTodelete)
-	  	if @quest.rewardType === "gold"
-	  		@reward      = @quest.reward
-	  		@currentGold = @avatar.gold
-	  		@newGold     = @currentGold + @reward
-	  		@avatar.update(gold: @newGold)
-	  	else
-	  		@reward = Item.find(@quest.reward)
-	  		@avatar.inventory.items << @reward
-	  	end
+  	@itemTodelete = @avatar.inventory.pockets.where(item_id: @quest.objetToFind).first
+    @avatar.inventory.pockets.delete(@itemTodelete)
+  	if @quest.rewardType === "gold"
+  		@reward      = @quest.reward
+  		@currentGold = @avatar.gold
+  		@newGold     = @currentGold + @reward
+  		@avatar.update(gold: @newGold)
+  	else
+  		@reward = Item.find(@quest.reward)
+  		@avatar.inventory.items << @reward
+  	end
 
-	  	@avQuest = @avatar.quests.where(id: params[:quest_id])
-	  	@avQuest.update(done: true)
+  	@avQuest = @avatar.quest_logs.where(quest_id: params[:quest_id])
+  	@avQuest.update(state: 'Finished')
 	end
 end

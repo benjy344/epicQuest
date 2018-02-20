@@ -1,5 +1,6 @@
 $rooms   = $('body').find( '.js-room' )
 $addItem = $rooms.find( '.js-add-item' )
+$addGold = $rooms.find( '.js-add-gold' )
 
 if !Window.mainNav? && $('#main-nav .js-user-info')? && parseInt($('#main-nav .js-user-info').attr('data-avatar-id') ) > 0
 	Window.mainNav = new Vue
@@ -49,7 +50,7 @@ if !Window.mainNav? && $('#main-nav .js-user-info')? && parseInt($('#main-nav .j
 
 
 
-if !Window.inventory?
+if !Window.inventory? && $('#v-inventory').length
 	Window.inventory = new Vue
 		el: '#v-inventory'
 		data:
@@ -96,8 +97,12 @@ if !Window.inventory?
 					this.almanach.splice index, 1
 			addItem: (id) ->
 				$.ajax
-			      	type: "get",
-			      	url: "/addItemById?item_id=#{id}"
+					type: "get",
+					url: "/addItemById?item_id=#{id}"
+			addGold: (amount) ->
+				$.ajax
+					type: "get",
+					url: "/addGold?gold=#{amount}"
 			togglePopin: () ->
 				this.popin.open = !this.popin.open
 			heal: (item) ->
@@ -159,14 +164,17 @@ if !Window.inventory?
 
 						cb() if cb? && typeof cb is "function"
 						_this.$forceUpdate()
-			toggle: ->
+			toggle: (open) ->
 				_this = this
+				if open? && open is true
+					_this.loadData ->
+						_this.open = true
 				if _this.open
-					_this.open = !_this.open
+					_this.open = false
 					_this.almanach = []
 				else
 					_this.loadData ->
-						_this.open = !_this.open
+						_this.open = true
 
 
 
@@ -178,6 +186,22 @@ if $addItem.length
 		$_this = $(this)
 		itemId = $_this.attr('data-item-id')
 		Window.inventory.addItem itemId
+
+		if $_this.next().length is 0 && $_this.prev().length is 0
+			$_this.parent().append('<li>Empty...</li>')
+
+		$_this.off('click')
+		$_this.remove()
+
+if $addGold.length
+	$addGold.off 'click'
+	$addGold.on 'click', (e) ->
+		e.preventDefault()
+		e.stopPropagation()
+		$_this = $(this)
+		amount = $_this.attr('data-gold')
+		console.log Window.inventory
+		Window.inventory.addGold amount
 
 		if $_this.next().length is 0 && $_this.prev().length is 0
 			$_this.parent().append('<li>Empty...</li>')

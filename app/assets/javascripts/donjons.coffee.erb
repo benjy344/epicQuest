@@ -37,7 +37,8 @@ if !Window.fightplace? && $('#fightplace').length > 0
 		mounted: () ->
 			this.loadData()
 		methods:
-			loadData: ->
+			loadData: (cb) ->
+				console.log 'load fightplace data'
 				_this = this
 				$.ajax
 					url: '/donjons/'+$('.js-donjon').attr('data-donjon-id')+'.json'
@@ -56,14 +57,18 @@ if !Window.fightplace? && $('#fightplace').length > 0
 							_this.shield = {}
 						if _this.avatar.id_armor is null
 							_this.armor  = {}
+						cb() if cb? && typeof cb is "function"
 						_this.$forceUpdate()
 
 			setMonster: (id) ->
-				this.visible = true
-				for monster, index in this.donjon.monsters when parseInt(monster.id) is parseInt(id)
-					this.monster      = monster
-					this.monsterMaxHp = this.monster.hp
-					this.restGold     = true if (this.monster.gold? && this.monster.gold>0)
+				_this = this
+				_this.loadData ()->
+					_this.visible = true
+					console.log _this.donjon.monsters
+					for monster, index in _this.donjon.monsters when parseInt(monster.id) is parseInt(id)
+						_this.monster      = monster
+						_this.monsterMaxHp = _this.monster.hp
+						_this.restGold     = true if (_this.monster.gold? && _this.monster.gold>0)
 
 			renderAvatar: ->
 				url = window.location.origin+'/majAvatar?MaxHealth='+this.avatar.MaxHealth+'&hp='+this.avatar.hp+'&level='+this.avatar.level+'&nextLevel='+this.avatar.nextLevel+'&defence='+this.avatar.defence+'&agility='+this.avatar.agility+'&force='+this.avatar.force+'&inteligence='+this.avatar.inteligence+'&exp='+this.avatar.exp
@@ -76,7 +81,7 @@ if !Window.fightplace? && $('#fightplace').length > 0
 				checkRoomMonster()
 
 			openInventory: ->
-				Window.inventory.toggle()
+				Window.inventory.toggle(true)
 
 			getAgility: ->
 				agility = avatar.agility if avatar?
@@ -203,12 +208,14 @@ if !Window.fightplace? && $('#fightplace').length > 0
 							setTimeout ->
 								_this.round = false
 							, 1000
-
+				enterFight: ()->
+					$fightplace.addClass('visible')
 
 
 if $enterFight.length && $fightplace.length
 	$enterFight.off('click')
 	$enterFight.on 'click', ()->
+
 		$fightplace.addClass('visible')
 		$this   = $(this)
 		monster = JSON.parse($this.attr('data-monster'))

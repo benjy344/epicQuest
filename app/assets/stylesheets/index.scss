@@ -385,6 +385,8 @@
 		  ul {
 		    margin: 0;
 		    padding: 0;
+		    max-height: 87%;
+		    overflow: auto;
 		    li {
 		      list-style: none;
 		      text-transform: uppercase;

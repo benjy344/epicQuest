@@ -34,15 +34,16 @@
 					<header><h3><%= @avatar.name %></h3></header>
 					<section>
 						<ul>
-							<li>Sword</li>
-							<li>Shield</li>
-							<li>Armor</li>
+							<li class="js-sword" >Sword</li>
+							<li class="js-shield" >Shield</li>
+							<li class="js-armor" >Armor</li>
+							<li class="js-gold" >Gold</li>
 						</ul>
 					</section>
 				</div>
 			</figure>
 
-			<% room.monsters.each_with_index do |monster, index| %>
+			<% rooms.find(4).monsters.each_with_index do |monster, index| %>
 				<figure id="monster-<%=room.id%>-<%=monster.id%>-<%=index%>" class="js-interactive-monster monster interactive" style="left:<%= rand(1..90)%>%; top: <%= rand(25..70)%>%;">
 					<div class="tooltip">
 						<header><h3><%= monster.name %></h3></header>
@@ -121,12 +122,17 @@
 						<header><h3>Chest</h3></header>
 						<section>
 							<ul>
-								<% if chest.items.count === 0 %>
+								<% if chest.items.count === 0 && chest.gold === 0%>
 									<li>Empty..</li>
 								<% else %>
-									<% chest.items.each do |item| %>
-									<% @title = 'Take '+item.name %>
-									<li class="js-add-item" data-item-id="<%= item.id %>"><%= 'Take '+item.name %></li>
+									<% if chest.items.count > 0%>
+										<% chest.items.each do |item| %>
+											<% @title = 'Take '+item.name %>
+											<li class="js-add-item" data-item-id="<%= item.id %>"><%= 'Take '+item.name %></li>
+										<% end %>
+									<% end %>
+									<% if chest.gold > 0 %>
+										<li class="js-add-gold" data-gold="<%= chest.gold %>"><%= 'Take '+chest.gold.to_s+ ' Gold' %></li>
 									<% end %>
 								<% end %>
 							</ul>

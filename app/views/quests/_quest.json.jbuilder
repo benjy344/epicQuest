@@ -5,7 +5,8 @@ json.quests quests do |quest|
 	json.description quest['description']
 	json.unlockLevel quest['unlockLevel']
 	json.rewardType  quest['rewardType']
-	json.itemToFind quest['itemToFind']
+  json.itemToFind  quest['itemToFind']
+	json.reward      quest['reward']
 	json.rewardItem  quest['rewardItem']
 end
 

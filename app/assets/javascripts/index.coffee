@@ -50,6 +50,7 @@ if !Window.town? && $('#town').length > 0
 						_this.avatar       = JSON.parse(JSON.stringify(data.avatar))
 						_this.items        = JSON.parse(JSON.stringify(data.items))
 						_this.avatarQuests = JSON.parse(JSON.stringify(data.quests))
+						_this.avatarLogs   = JSON.parse(JSON.stringify(data.quest_logs))
 						_this.sortedItems  = []
 						for item, index in _this.items
 							item.count = 0
@@ -92,17 +93,17 @@ if !Window.town? && $('#town').length > 0
 					url: "/sale?item_id=#{item.id}"
 					success: (data)->
 						_this.loadData()
-			isActiveQuest: (id) ->
-				for avQuest in this.avatarQuests
-					if id is avQuest.id
-						return true
+			isInProgressQuest: (id) ->
+				for log in this.avatarLogs
+					if id is log.questId
+						return log.state is 'In progress'
 				return false
 			isFinishedQuest: (quest) ->
-				for avQuest in this.avatarQuests when quest.id is avQuest.id
-					return avQuest.done
+				for log in this.avatarLogs when quest.id is log.questId
+					return log.state is 'Finished'
 
 			isCompletedQuest: (quest)->
-				for item in this.items when item.id is quest.itemToFind
+				for item in this.items when item.id is quest.itemToFind.id
 					return true
 				return false
 			CompletQuest: (id)->
@@ -140,6 +141,7 @@ if !Window.town? && $('#town').length > 0
 							url: "/quests.json"
 							success: (data) ->
 								_this.quests = JSON.parse JSON.stringify data.quests
+								console.log data.quests
 			setTooltip: (index) ->
 				if this.activeTooltip isnt parseInt index
 					this.activeTooltip = parseInt index

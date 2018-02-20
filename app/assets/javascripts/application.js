@@ -100,7 +100,41 @@ var ChangeRoom, skipIntro, toggleTooltip
 
 toggleTooltip = function(e) {
   if (!$(this).hasClass('tooltip-active')) {
+    $this = $(this)
     $interactives.removeClass('tooltip-active')
+    if ($(this).hasClass('avatar') ) {
+      $.get({
+        url: "/avatars/"+$('.js-user-info').attr('data-avatar-id')+".json",
+        success: (data) => {
+          avatar      = JSON.parse(JSON.stringify(data.avatar))
+          items       = JSON.parse(JSON.stringify(data.items))
+          $this.find('.js-gold').text(avatar.gold+' Gold')
+          for (k = 0, len1 = items.length; k < len1; k++) {
+            item = items[k];
+            switch (item.id) {
+              case avatar.id_sword:
+                $this.find('.js-sword').removeClass('hidden').text(item.name)
+                break;
+              case avatar.id_shield:
+                $this.find('.js-shield').removeClass('hidden').text(item.name)
+                break;
+              case avatar.id_armor:
+                $this.find('.js-armor').removeClass('hidden').text(item.name)
+            }
+            if (avatar.id_sword === null) {
+              $this.find('.js-sword').addClass('hidden')
+            }
+            if (avatar.id_shield === null) {
+              $this.find('.js-shield').addClass('hidden')
+            }
+            if (avatar.id_armor === null) {
+              $this.find('.js-armor').addClass('hidden')
+            }
+          }
+        }
+
+      })
+    }
     return $(this).toggleClass('tooltip-active')
   } else {
     return $(this).toggleClass('tooltip-active')
