@@ -70,7 +70,7 @@ if !Window.town? && $('#town').length > 0
 			setGuildFocus: (index) ->
 				this.expendGuild = if this.expendGuild == index then null else index
 			isSitedObject: (id) ->
-				return (id == this.avatar.id_sword || this.avatar.id_armor || this.avatar.id_shield)
+				return (id == this.avatar.id_sword || id == this.avatar.id_armor || id == this.avatar.id_shield)
 			rest: ->
 				_this = this
 				_this.loading = true

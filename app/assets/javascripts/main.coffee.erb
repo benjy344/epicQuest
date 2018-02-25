@@ -67,7 +67,7 @@ if !Window.inventory? && $('#v-inventory').length
 				open: false
 		methods:
 			isSitedObject: (id) ->
-				return (id == this.avatar.id_sword || this.avatar.id_armor || this.avatar.id_shield)
+				return (id == this.avatar.id_sword || id == this.avatar.id_armor || id == this.avatar.id_shield)
 			setFocus: (index) ->
 				this.expend = if this.expend == index then null else index
 			setAlmanachFocus: (index) ->

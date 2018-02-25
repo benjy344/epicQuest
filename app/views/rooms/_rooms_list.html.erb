@@ -43,7 +43,7 @@
 				</div>
 			</figure>
 
-			<% rooms.find(4).monsters.each_with_index do |monster, index| %>
+			<% room.monsters.each_with_index do |monster, index| %>
 				<figure id="monster-<%=room.id%>-<%=monster.id%>-<%=index%>" class="js-interactive-monster monster interactive" style="left:<%= rand(1..90)%>%; top: <%= rand(25..70)%>%;">
 					<div class="tooltip">
 						<header><h3><%= monster.name %></h3></header>
