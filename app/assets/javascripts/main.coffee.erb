@@ -166,9 +166,11 @@ if !Window.inventory? && $('#v-inventory').length
 						_this.$forceUpdate()
 			toggle: (open) ->
 				_this = this
+				console.log open
 				if open? && open is true
 					_this.loadData ->
 						_this.open = true
+					return
 				if _this.open
 					_this.open = false
 					_this.almanach = []

@@ -219,6 +219,36 @@ if !Window.fightplace? && $('#fightplace').length > 0
 							setTimeout ->
 								_this.round = false
 							, 1000
+				else
+					if ( Math.round( this.avatar.hp - (this.monster.strong - (avatarDefence / 2))) < this.avatar.hp  )
+						this.avatar.hp = Math.round( this.avatar.hp - (this.monster.strong - (avatarDefence / 2)))
+					else
+						this.avatar.hp = this.avatar.hp - 1
+
+					if (this.avatar.hp <= 0)
+						this.avatar.hp = 0
+						this.renderAvatar()
+						#si l'avatar est KO => avatar loose
+						this.gameOver()
+					else
+						#l'avatar n'est pas mort, le combat continue
+						this.renderAvatar()
+						#attaque le monstre
+						if ( Math.round( this.monster.hp - (force - (this.monster.defence / 2))) < this.monster.hp  )
+							this.monster.hp = Math.round( this.monster.hp - (force - (this.monster.defence / 2)))
+
+						else
+							this.monster.hp = this.monster.hp - 1
+
+						if (this.monster.hp <= 0)
+							#si le montre est KO => avatar WIN
+							this.monster.hp = 0
+							this.win()
+						else
+							_this = this
+							setTimeout ->
+								_this.round = false
+							, 1000
 				enterFight: ()->
 					$fightplace.addClass('visible')
 
