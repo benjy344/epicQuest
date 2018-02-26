@@ -27,6 +27,7 @@ if !Window.fightplace? && $('#fightplace').length > 0
 			avatar: {}
 			avatarItems: []
 			monster: {}
+			monsterItems: {}
 			sword:{}
 			armor:{}
 			shield:{}
@@ -60,15 +61,25 @@ if !Window.fightplace? && $('#fightplace').length > 0
 						cb() if cb? && typeof cb is "function"
 						_this.$forceUpdate()
 
+			getMonsterItem: (item, index) ->
+				this.monsterItems[index] = false
+				this.$forceUpdate()
+				$.ajax
+					type: "get",
+					url: "/addItemById?item_id=#{item.id}"
+
 			setMonster: (id) ->
 				_this = this
+				_this.monsterDead = false
 				_this.loadData ()->
 					_this.visible = true
-					console.log _this.donjon.monsters
 					for monster, index in _this.donjon.monsters when parseInt(monster.id) is parseInt(id)
 						_this.monster      = monster
 						_this.monsterMaxHp = _this.monster.hp
 						_this.restGold     = true if (_this.monster.gold? && _this.monster.gold>0)
+						_this.monsterItems = []
+						for item in _this.monster.items
+							_this.monsterItems.push true
 
 			renderAvatar: ->
 				url = window.location.origin+'/majAvatar?MaxHealth='+this.avatar.MaxHealth+'&hp='+this.avatar.hp+'&level='+this.avatar.level+'&nextLevel='+this.avatar.nextLevel+'&defence='+this.avatar.defence+'&agility='+this.avatar.agility+'&force='+this.avatar.force+'&inteligence='+this.avatar.inteligence+'&exp='+this.avatar.exp
@@ -190,8 +201,8 @@ if !Window.fightplace? && $('#fightplace').length > 0
 						this.win()
 					else
 						#si le montre n'est pas KO, il attaque
-						if ( Math.round( this.avatar.hp - (this.monster.force - (avatarDefence / 2))) < this.avatar.hp  )
-							this.avatar.hp = Math.round( this.avatar.hp - (this.monster.force - (avatarDefence / 2)))
+						if ( Math.round( this.avatar.hp - (this.monster.strong - (avatarDefence / 2))) < this.avatar.hp  )
+							this.avatar.hp = Math.round( this.avatar.hp - (this.monster.strong - (avatarDefence / 2)))
 						else
 							this.avatar.hp = this.avatar.hp - 1
 

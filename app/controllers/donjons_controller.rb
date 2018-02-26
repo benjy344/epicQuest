@@ -23,7 +23,18 @@ class DonjonsController < ApplicationController
       @count_chest += r.chests.count
       @count_monster += r.monsters.count
       r.monsters.each do |monster|
-        @monsters << monster
+        hydratedMonster = {}
+        hydratedMonster["id"]      = monster.id
+        hydratedMonster["name"]    = monster.name
+        hydratedMonster["hp"]      = monster.hp
+        hydratedMonster["strong"]  = monster.strong
+        hydratedMonster["agility"] = monster.agility
+        hydratedMonster["exp"]     = monster.exp
+        hydratedMonster["items"]   = monster.inventory.items.clone()
+        hydratedMonster["defence"] = monster.defence
+        hydratedMonster["gold"]    = monster.gold
+
+        @monsters << hydratedMonster
       end
     end
     respond_to do |format|

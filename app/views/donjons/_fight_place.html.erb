@@ -41,7 +41,7 @@ end
 		<div v-if="monsterDead">
 			<p>You defeated the {{monster.name}}</p>
 
-			<button class="btn" v-if='monster.gold && restGold' @click="getGold()" >Get {{monster.gold}} Gold</button>
+			<button class="btn" v-for="(item, index) in monster.items" v-if="monster.items.length && monsterItems[index]" v-on:click="getMonsterItem(item, index)" >Get {{item.name}}</button>
 			<button class="btn" v-if='monster.gold && restGold' @click="getGold()" >Get {{monster.gold}} Gold</button>
 		</div>
 	</div>
